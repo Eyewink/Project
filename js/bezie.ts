@@ -117,41 +117,57 @@ export default class Bezie {
 		}
 	}
 
-	private _animate = () => {
-		switch (this._dots) {
-			case 4:
-				var p1 = this._calc(this._data[0], this._data[1], this._delta);
-				var p2 = this._calc(this._data[1], this._data[2], this._delta);
-				var p3 = this._calc(this._data[2], this._data[3], this._delta);
-				var q1 = this._calc(p1,p2,this._delta);
-				var q2 = this._calc(p2,p3,this._delta);
-				var result = this._calc(q1,q2,this._delta);
-
-				if(this._support) {
-					this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
-					this._drawLine(p2,p3,.5,'rgba(102,255,102,.2)');
-					this._drawLine(q1,q2,.5,'rgba(255,102,102,.4)');
-				}
-				this._drawLine(this._start, result, 2);
-				this._start = result;
-				break;
-
-			case 3: {
-				var p1 = this._calc(this._data[0], this._data[1], this._delta);
-				var p2 = this._calc(this._data[1], this._data[2], this._delta);
-				var result = this._calc(p1,p2,this._delta);
-
-				if(this._support) {
-					this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
-				}
-				this._drawLine(this._start, result, 2);
-				this._start = result;
-				break;         
-			}
-
-			default:
-				break;
+	private _alg = (data:Dot[], delta:number):Dot => {
+		if(data.length === 1) {
+			return data[0]
 		}
+
+		let _result:Dot[] = [];
+		for(var i=0; i < data.length-1; i++) {
+			_result.push(this._calc(data[i], data[i+1],delta));
+		}
+		return this._alg(_result, delta);
+	}
+
+	private _animate = () => {
+		// switch (this._dots) {
+		// 	case 4:
+		// 		var p1 = this._calc(this._data[0], this._data[1], this._delta);
+		// 		var p2 = this._calc(this._data[1], this._data[2], this._delta);
+		// 		var p3 = this._calc(this._data[2], this._data[3], this._delta);
+		// 		var q1 = this._calc(p1,p2,this._delta);
+		// 		var q2 = this._calc(p2,p3,this._delta);
+		// 		var result = this._calc(q1,q2,this._delta);
+
+		// 		if(this._support) {
+		// 			this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
+		// 			this._drawLine(p2,p3,.5,'rgba(102,255,102,.2)');
+		// 			this._drawLine(q1,q2,.5,'rgba(255,102,102,.4)');
+		// 		}
+		// 		this._drawLine(this._start, result, 2);
+		// 		this._start = result;
+		// 		break;
+
+		// 	case 3: {
+		// 		var p1 = this._calc(this._data[0], this._data[1], this._delta);
+		// 		var p2 = this._calc(this._data[1], this._data[2], this._delta);
+		// 		var result = this._calc(p1,p2,this._delta);
+
+		// 		if(this._support) {
+		// 			this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
+		// 		}
+		// 		this._drawLine(this._start, result, 2);
+		// 		this._start = result;
+		// 		break;         
+		// 	}
+
+		// 	default:
+		// 		break;
+		// }
+
+		var result = this._alg(this._data, this._delta);
+		this._drawLine(this._start, result, 2);
+		this._start = result;
 
 		if (this._delta > 1) {
 			cancelAnimationFrame(this.animation);
