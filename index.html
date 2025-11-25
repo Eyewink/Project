@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+	<title>Тимофей Рукин &mdash; Проектная работа</title>
+</head>
+
+<body class="content-grid">
+
+	<section>
+		<h1>Создание динамической графики с&nbsp;помощью алгоритмов построения кривых</h1>
+		<div class="credits">
+			<div class="author">Рукин Тимофей</div>
+			<div class="curator">
+				<label for="">Куратор</label>
+				Лебедев Дмитрий Алексеевич
+			</div>
+		</div>
+	</section>
+
+	<section class="about full content-grid">
+		<p>Классические алгоритмы построения кривых, такие как кривые Безье, B-сплайны и другие, сохраняют высокую значимость в современном мире благодаря своей универсальности, эффективности и широкому спектру применения. Они лежат в основе многих технологий, от компьютерной графики и CAD-систем до моделирования сложных поверхностей в инженерии и архитектуре.</p>
+	</section>
+
+	<section>
+		<h2>Кривые Безье</h2>
+		<p>Кривые Безье были разработаны в 1960-х годах независимо двумя инженерами: Пьером Безье и Полем де Кастельжо. Они работали над улучшением аэродинамики автомобильных кузовов, что требовало создания плавных и точных кривых. Пьер Безье опубликовал свои результаты в начале 1960-х годов, поэтому кривые получили его имя. Поль де Кастельжо разработал алгоритм для вычисления, но его работы оставались секретными до конца 1960-х.</p>
+		<h3>Построение</h3>
+		<div>
+			Самым популярным способом построения является метод де Кастельжо:
+			<ol>
+				<li>Рисуем опорные точки P<sub>0</sub>, P<sub>1</sub>, ... ,P<sub>n</sub> и соединяем их последовательно отрезками: 
+					P<sub>0</sub> &RightArrow; P<sub>1</sub>
+					P<sub>1</sub> &RightArrow; P<sub>2</sub>
+					&RightArrow; ... &RightArrow; P<sub>n</sub>
+					Получаем ломаную линию.</li>
+				<li>Взять некую переменную t, которая будет меняться от 0 до 1 с определенным интервалом (чем меньше, тем лучше)</li>
+				<li>Для каждой t поставить точку на отрезках, пропорциональную t (при t = 0.5 поставить точку на середине) и соединить их. Получится N-1 отрезков</li>
+				<li>Повторять, пока не останется одна точка</li>
+			</ol>
+		</div>
+
+		<section class="result bezie">
+			<div class="controls">
+				<div>
+					<div>
+						<input type="radio" id="bezie_3x" name="bezie_type" value="3" checked>
+						<label for="bezie_3x">Квадратичная кривая (3 точки)</label>
+					</div>
+					<div>
+						<input type="radio" id="bezie_4x" name="bezie_type" value="4">
+						<label for="bezie_4x">Кубическая кривая (4 точки)</label>
+					</div>
+				</div>
+				<div>
+					<input type="checkbox" name="bezie_support" id="bezie_support" checked="checked">
+					<label for="bezie_support">Отображать построение</label>
+				</div>
+				<div>
+					<input type="button" id="bezie_redraw" value="Перестроить">
+				</div>
+			</div>
+			<canvas id="bezie" width="1000" height="500">
+				Ваш браузер не поддерживает canvas.
+			</canvas>
+		</section>
+
+	</section>
+
+	<section>
+		<h2>B-сплайны</h2>
+		<p>B-сплайны были введены американским математиком Исааком Шенбергом в 1946 году. Термин B-сплайн происходит от «basis spline (базисный сплайн)» . B-сплайны обобщают кривую Безье, позволяя управлять формой кривой с помощью контрольных точек, но при этом алгебраическая степень B-сплайна не зависит от их числа.</p>
+		<h3>Построение</h3>
+		<div><img src="img/bspline.svg" alt="" srcset="" /></div>
+
+		<section class="result bspline">
+	    	<div class="controls">
+				<div>
+					<div>
+						<input type="radio" id="bspline_simple" name="bspline_type" value="simple" checked>
+						<label for="bspline_simple">Элементарная кубическая</label>
+					</div>
+					<div>
+						<input type="radio" id="bspline_complex" name="bspline_type" value="complex">
+						<label for="bspline_complex">Составная</label>
+					</div>
+				</div>
+				<div>
+					<input type="checkbox" name="bspline_auto" id="bspline_auto">
+					<label for="bspline_auto">Достраивать автоматически</label>
+				</div>
+                <div>
+                    <input type="button" id="bspline_redraw" value="Заново">
+                </div>
+            </div>
+			<canvas id="bspline" width="1000" height="500">
+                Ваш браузер не поддерживает canvas.
+            </canvas>
+		</section>
+
+	</section>
+
+	<section>
+		<h2>Кубические сплайны</h2>
+		<p>Кубические сплайны имеют более давнюю историю. Их математическое представление восходит к теории расчета изгиба балок, основы которой заложили Леонард Эйлер и Даниил Бернулли около 1750 года. Кубические сплайны изначально описывали форму упругой линии нагруженной балки. В 1938 году В.Кваде и Л.Коллатц применяли сплайны в своих работах, а в 1946 году году Шенберг впервые использовал термин “сплайн” в математическом контексте.</p>
+
+		<section class="result cube tbd">
+			скоро
+		</section>
+
+	</section>
+
+	<footer class="full content-grid">
+		<h2>Источники</h2>
+		<h3>Литература:</h3>
+		<ul>
+			<li>Е.В.Шикин, А.И.Плис. Кривые и поверхности на экране компьютера. &mdash; М.:«ДИАЛОГ-МИФИ», 1996</li>
+		</ul>
+		<h3>Ссылки:</h3>
+		<ul>
+			<li>Почти всё про кривые Безье <a href="https://learn.javascript.ru/bezier-curve">https://learn.javascript.ru/bezier-curve</a></li>
+			<li>Основные свойства кривой Безье и В-сплайна, также блок теории <a href="https://post.nghiatu.com/ru/tutorial/computer-graphics/computer-graphics-curves/krivye-komp-uternoj-grafiki">https://post.nghiatu.com/ru/tutorial/computer-graphics/computer-graphics-curves/krivye-komp-uternoj-grafiki</a></li>
+			<li>Youtube: Bezier Curves Explained <a href="https://www.youtube.com/watch?v=pnYccz1Ha34">https://www.youtube.com/watch?v=pnYccz1Ha34</a></li>
+			<li>Youtube: The Beauty of Bézier Curves <a href="https://www.youtube.com/watch?v=aVwxzDHniEw">https://www.youtube.com/watch?v=aVwxzDHniEw</a></li>
+			<li>Youtube: Splines in 5 minutes: Part 3 -- B-splines and 2D <a href="https://www.youtube.com/watch?v=JwN43QAlF50">https://www.youtube.com/watch?v=JwN43QAlF50</a></li>
+			<li>Youtube: The Continuity of Splines <a href="https://www.youtube.com/watch?v=jvPPXbo87ds">https://www.youtube.com/watch?v=jvPPXbo87ds</a></li>
+			<li>Youtube: A new approach to container and wrapper classes <a href="https://www.youtube.com/watch?v=c13gpBrnGEw">https://www.youtube.com/watch?v=c13gpBrnGEw</a></li>
+		</ul>
+	</footer>
+
+	<script type="module" defer>
+		var letters;
+		(function (letters) {
+			letters[letters["A"] = 0] = "A";
+			letters[letters["B"] = 1] = "B";
+			letters[letters["C"] = 2] = "C";
+			letters[letters["D"] = 3] = "D";
+			letters[letters["E"] = 4] = "E";
+			letters[letters["F"] = 5] = "F";
+			letters[letters["G"] = 6] = "G";
+			letters[letters["H"] = 7] = "H";
+			letters[letters["I"] = 8] = "I";
+			letters[letters["J"] = 9] = "J";
+			letters[letters["K"] = 10] = "K";
+			letters[letters["L"] = 11] = "L";
+			letters[letters["M"] = 12] = "M";
+			letters[letters["N"] = 13] = "N";
+			letters[letters["O"] = 14] = "O";
+			letters[letters["P"] = 15] = "P";
+			letters[letters["Q"] = 16] = "Q";
+			letters[letters["R"] = 17] = "R";
+			letters[letters["S"] = 18] = "S";
+			letters[letters["T"] = 19] = "T";
+			letters[letters["U"] = 20] = "U";
+			letters[letters["V"] = 21] = "V";
+			letters[letters["W"] = 22] = "W";
+			letters[letters["X"] = 23] = "X";
+			letters[letters["Y"] = 24] = "Y";
+			letters[letters["Z"] = 25] = "Z";
+		})(letters || (letters = {}));
+
+		var init = () => {
+			var _a, _b, _c, _d;
+			const canvas_bezie = document.getElementById('bezie');
+			const canvas_bspline = document.getElementById('bspline');
+			const bezie = new Bezie(canvas_bezie);
+			const bspline = new Bspline(canvas_bspline);
+			const parent = document.querySelector('body > section');
+			let _width = 0;
+			function resizeCanvas() {
+				if ((parent === null || parent === void 0 ? void 0 : parent.clientWidth) != _width) {
+					_width = parent === null || parent === void 0 ? void 0 : parent.clientWidth;
+					if (canvas_bezie !== null)
+						canvas_bezie.width = (_width || 1000) - 2;
+					if (canvas_bspline !== null)
+						canvas_bspline.width = (_width || 1000) - 2;
+					bezie.redraw();
+					bspline.reset();
+				}
+			}
+			resizeCanvas();
+			bezie.reset();
+			bspline.reset();
+			window.addEventListener('resize', resizeCanvas);
+			document.querySelectorAll('input[name="bezie_type"]').forEach(radio => {
+				radio.addEventListener('change', function (e) {
+					let value = e.target.value;
+					bezie.changeType(parseInt(value));
+				});
+			});
+			document.querySelectorAll('input[name="bspline_type"]').forEach(radio => {
+				radio.addEventListener('change', function (e) {
+					let value = e.target.value;
+					bspline.changeType(value);
+				});
+			});
+			(_a = document.querySelector('#bezie_redraw')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function (e) {
+				bezie.redraw();
+			});
+			(_b = document.querySelector('#bezie_support')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function (e) {
+				bezie.toggleSupport();
+			});
+			(_c = document.querySelector('#bspline_redraw')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (e) {
+				bspline.reset();
+			});
+			(_d = document.querySelector('#bspline_auto')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
+				bspline.toggleSupport();
+			});
+		};
+		document.addEventListener('DOMContentLoaded', init);
+
+		class Bezie {
+			constructor(target) {
+				this._dots = 3;
+				this._data = [];
+				this._support = true;
+				this._delta = 0;
+				this._start = { x: 0, y: 0 };
+				this._userClickCouner = 0;
+				this._clear = () => {
+					var _a;
+					const rect = this._target.getBoundingClientRect();
+					(_a = this._target.getContext('2d')) === null || _a === void 0 ? void 0 : _a.clearRect(0, 0, rect.width, rect.height);
+					this._delta = 0;
+				};
+				this._reset = () => {
+					this._clear();
+					this._data = [];
+					for (var i = 0; i < this._dots; i++) {
+						var dot = this._addPoint();
+						this._data.push(dot);
+					}
+					this._start = this._data[0];
+					this._reDraw();
+				};
+				this.init = () => {
+					this._reset();
+					this._target.addEventListener('click', (e) => {
+						const rect = this._target.getBoundingClientRect();
+						const x = e.clientX - rect.left;
+						const y = e.clientY - rect.top;
+						this._userClick({ x: x, y: y });
+					});
+				};
+				this._addPoint = (_x, _y) => {
+					const rect = this._target.getBoundingClientRect();
+					return {
+						x: _x || rect.width * Math.random(),
+						y: _y || rect.height * Math.random()
+					};
+				};
+				this._drawLine = (start, end, lineWidth, strokeStyle) => {
+					let ctx = this._target.getContext('2d');
+					ctx.beginPath();
+					ctx.lineWidth = lineWidth || 1;
+					ctx.strokeStyle = strokeStyle || 'rgba(51, 102, 255, 1)';
+					ctx.moveTo(start.x, start.y);
+					ctx.lineTo(end.x, end.y);
+					ctx.stroke();
+				};
+				this._drawDot = (dot, text, font) => {
+					let ctx = this._target.getContext('2d');
+					if (text !== undefined) {
+						ctx.font = font || '13px Arial';
+						ctx.fillStyle = '#333';
+						ctx.fillText(text, dot.x, dot.y - 5);
+					}
+					ctx.beginPath();
+					ctx.fillStyle = 'red';
+					ctx.arc(dot.x, dot.y, 2, 0, 2 * Math.PI);
+					ctx.fill();
+				};
+				this._reDraw = () => {
+					for (var i = 0; i < this._data.length; i++) {
+						if (i > 0) {
+							this._drawLine(this._data[i - 1], this._data[i], .5, 'rgba(0,0,0,.5)');
+						}
+						this._drawDot(this._data[i], letters[i]);
+					}
+					if (this._data.length == this._dots) {
+						this.animation = requestAnimationFrame(this._animate);
+					}
+				};
+				this._userClick = (dot) => {
+					cancelAnimationFrame(this.animation);
+					if (this._userClickCouner == 0) {
+						this._data = [];
+						this._start = dot;
+					}
+					this._data.push(dot);
+					this._clear();
+					this._reDraw();
+					this._userClickCouner = (this._userClickCouner + 1) % this._dots;
+				};
+				this._calc = (start, end, t) => {
+					return {
+						x: start.x + (end.x - start.x) * t,
+						y: start.y + (end.y - start.y) * t
+					};
+				};
+				this._animate = () => {
+					switch (this._dots) {
+						case 4:
+							var p1 = this._calc(this._data[0], this._data[1], this._delta);
+							var p2 = this._calc(this._data[1], this._data[2], this._delta);
+							var p3 = this._calc(this._data[2], this._data[3], this._delta);
+							var q1 = this._calc(p1, p2, this._delta);
+							var q2 = this._calc(p2, p3, this._delta);
+							var result = this._calc(q1, q2, this._delta);
+							if (this._support) {
+								this._drawLine(p1, p2, .5, 'rgba(102,255,102,.2)');
+								this._drawLine(p2, p3, .5, 'rgba(102,255,102,.2)');
+								this._drawLine(q1, q2, .5, 'rgba(255,102,102,.4)');
+							}
+							this._drawLine(this._start, result, 2);
+							this._start = result;
+							break;
+						case 3: {
+							var p1 = this._calc(this._data[0], this._data[1], this._delta);
+							var p2 = this._calc(this._data[1], this._data[2], this._delta);
+							var result = this._calc(p1, p2, this._delta);
+							if (this._support) {
+								this._drawLine(p1, p2, .5, 'rgba(102,255,102,.2)');
+							}
+							this._drawLine(this._start, result, 2);
+							this._start = result;
+							break;
+						}
+						default:
+							break;
+					}
+					if (this._delta > 1) {
+						cancelAnimationFrame(this.animation);
+					}
+					else {
+						this._delta += 0.01;
+						this.animation = requestAnimationFrame(this._animate);
+					}
+				};
+				this.changeType = (type) => {
+					switch (type) {
+						case 3:
+							this._dots = type;
+							this._reset();
+							break;
+						case 4:
+							this._dots = type;
+							this._reset();
+							break;
+						default:
+							break;
+					}
+				};
+				this.redraw = () => {
+					this._clear();
+					this._start = this._data[0];
+					this._reDraw();
+				};
+				this.toggleSupport = () => {
+					this._support = !this._support;
+					this._clear();
+					this._start = this._data[0];
+					this._reDraw();
+				};
+				this.reset = () => {
+					this._reset();
+				};
+				this._target = target;
+				this.init();
+			}
+		}
+
+		class Bspline {
+			constructor(target) {
+				this._type = 'simple';
+				this._data = [];
+				this._delta = 0;
+				this._offset = 0;
+				this._start = { x: 0, y: 0 };
+				this._userClickCouner = 0;
+				this._autoConstract = false;
+				this._clear = () => {
+					var _a;
+					const rect = this._target.getBoundingClientRect();
+					(_a = this._target.getContext('2d')) === null || _a === void 0 ? void 0 : _a.clearRect(0, 0, rect.width, rect.height);
+					this._delta = 0;
+					this._offset = 0;
+				};
+				this._reset = () => {
+					this._clear();
+					cancelAnimationFrame(this.animation);
+					this._data = [];
+					for (let i = 0; i < 4; i++) {
+						let dot = this._addPoint();
+						this._data.push(dot);
+					}
+					this._reDraw();
+				};
+				this.init = () => {
+					this._reset();
+					this._target.addEventListener('click', (e) => {
+						const rect = this._target.getBoundingClientRect();
+						const x = e.clientX - rect.left;
+						const y = e.clientY - rect.top;
+						this._userClick({ x: x, y: y });
+					});
+				};
+				this._addPoint = (_x, _y) => {
+					const rect = this._target.getBoundingClientRect();
+					return {
+						x: _x || rect.width * Math.random(),
+						y: _y || rect.height * Math.random()
+					};
+				};
+				this._drawLine = (start, end, lineWidth, strokeStyle) => {
+					let ctx = this._target.getContext('2d');
+					ctx.beginPath();
+					ctx.lineWidth = lineWidth || 1;
+					ctx.strokeStyle = strokeStyle || 'rgba(51, 102, 255, 1)';
+					ctx.moveTo(start.x, start.y);
+					ctx.lineTo(end.x, end.y);
+					ctx.stroke();
+				};
+				this._drawSub = (dot, text) => {
+					let ctx = this._target.getContext('2d');
+					ctx.font = `9px Arial`;
+					ctx.fillStyle = '#999';
+					ctx.fillText(text, dot.x + 10, dot.y - 5);
+				};
+				this._drawDot = (dot, text, font) => {
+					let ctx = this._target.getContext('2d');
+					if (text !== undefined) {
+						ctx.font = font || '13px Arial';
+						ctx.fillStyle = '#333';
+						ctx.textBaseline = 'bottom';
+						ctx.fillText(text, dot.x, dot.y - 5);
+					}
+					if (this._type == 'complex') {
+						this._drawSub(dot, String(Math.floor(this._data.length / 27)));
+					}
+					ctx.beginPath();
+					ctx.fillStyle = 'red';
+					ctx.arc(dot.x, dot.y, 2, 0, 2 * Math.PI);
+					ctx.fill();
+				};
+				this._reDraw = () => {
+					for (var i = 0; i < this._data.length; i++) {
+						if (i > 0) {
+							this._drawLine(this._data[i - 1], this._data[i], .5, 'rgba(0,0,0,.5)');
+						}
+						this._drawDot(this._data[i], letters[i]);
+					}
+					if (this._data.length == 4) {
+						this._start = this._calc(this._data[0], this._data[1], this._data[2], this._data[3], 0);
+						this.animation = requestAnimationFrame(this._animate);
+					}
+				};
+				this._userClick = (dot) => {
+					switch (this._type) {
+						case 'simple':
+							cancelAnimationFrame(this.animation);
+							if (this._userClickCouner == 0) {
+								this._data = [];
+							}
+							this._data.push(dot);
+							this._clear();
+							this._reDraw();
+							this._userClickCouner = (this._userClickCouner + 1) % 4;
+							break;
+						case 'complex':
+							this._data.push(dot);
+							let length = this._data.length - 1;
+							this._drawLine(this._data[length - 1], this._data[length], .5, 'rgba(0,0,0,.5)');
+							this._drawDot(this._data[length], letters[length % 26]);
+							if (!this.animation) {
+								this.animation = requestAnimationFrame(this._animate);
+							}
+							break;
+						default:
+							break;
+					}
+				};
+				this._calc = (p1, p2, p3, p4, t) => {
+					let m1 = Math.pow((1 - t), 3) / 6;
+					let m2 = (3 * Math.pow(t, 3) - 6 * Math.pow(t, 2) + 4) / 6;
+					let m3 = (-3 * Math.pow(t, 3) + 3 * Math.pow(t, 2) + 3 * t + 1) / 6;
+					let m4 = Math.pow(t, 3) / 6;
+					return {
+						x: m1 * p1.x + m2 * p2.x + m3 * p3.x + m4 * p4.x,
+						y: m1 * p1.y + m2 * p2.y + m3 * p3.y + m4 * p4.y
+					};
+				};
+				this._animate = () => {
+					var result = this._calc(this._data[this._offset], this._data[this._offset + 1], this._data[this._offset + 2], this._data[this._offset + 3], this._delta);
+					this._drawLine(this._start, result, 2);
+					this._start = result;
+					if (this._delta > 1) {
+						switch (this._type) {
+							case 'simple':
+								cancelAnimationFrame(this.animation);
+								break;
+							case 'complex':
+								if (this._offset == this._data.length - 4 && this._autoConstract) {
+									let dot = this._addPoint();
+									this._data.push(dot);
+									let length = this._data.length - 1;
+									this._drawLine(this._data[length - 1], this._data[length], .5, 'rgba(0,0,0,.5)');
+									this._drawDot(this._data[length], letters[length % 26]);
+								}
+								if (this._offset < this._data.length - 4) {
+									this._offset++;
+									this._delta = 0;
+									this.animation = requestAnimationFrame(this._animate);
+								}
+								else {
+									cancelAnimationFrame(this.animation);
+									this._offset++;
+									this._delta = 0;
+									this.animation = null;
+								}
+								break;
+							default:
+								break;
+						}
+					}
+					else {
+						this._delta += 0.01;
+						this.animation = requestAnimationFrame(this._animate);
+					}
+				};
+				this.changeType = (type) => {
+					switch (type) {
+						case 'simple':
+							this._type = type;
+							this._userClickCouner = 0;
+							this._reset();
+							break;
+						case 'complex':
+							this._type = type;
+							this.redraw();
+							break;
+						default:
+							break;
+					}
+				};
+				this.redraw = () => {
+					this._clear();
+					this._start = this._calc(this._data[0], this._data[1], this._data[2], this._data[3], 0);
+					this._reDraw();
+				};
+				this.toggleSupport = () => {
+					this._autoConstract = !this._autoConstract;
+				};
+				this.reset = () => {
+					this._reset();
+				};
+				this._target = target;
+				this.init();
+			}
+		}
+	</script>
+</body>
+</html>

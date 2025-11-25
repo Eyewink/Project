@@ -1,0 +1,233 @@
+// Цвета 
+@color_primary:     #222;
+@color_secondary:   #666;
+@color_bg:	    	#fff;
+
+@color_hyperlink:   #3366CC;
+
+@color_blue:	    #3fa9f5;
+@color_green:		#7ac943;
+@color_orange: 	   	#ff931e;
+
+
+@fs__S:     clamp(0.7rem, calc(0.6rem + 0.1vw), 0.8rem);
+@fs__M:     clamp(0.9rem, calc(0.8rem + 0.2vw), 1rem);
+@fs__L:     clamp(1.2rem, calc(1rem + 0.33vw), 1.4rem);
+@fs__XL:    clamp(1.6rem, calc(1.2rem + 0.66vw), 2.4rem);
+@fs__XXL:   clamp(2.4rem, calc(2rem + 1vw), 3.2rem);
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+body {
+    color: @color_primary;
+    font-size: @fs__M;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+
+    margin: 0;
+
+    h1 {
+        font-family: "Roboto slab", serif;
+        font-size: @fs__XXL;
+        font-weight: 400;
+        line-height: 1.2;
+
+        margin-top: clamp(8rem, calc(6rem + 8vw) , 16rem);
+        margin-bottom: clamp(4rem, calc(2rem + 8vw), 8rem);
+    }
+
+    h2 {
+        font-family: "Roboto slab", serif;
+        font-size: @fs__XL;
+        font-weight: 400;
+        line-height: 1.2;
+
+        margin-top: clamp(5rem, calc(3rem + 6vw) , 10rem);
+        margin-bottom: clamp(1rem, calc(.5rem + 3vw), 2rem);
+    }
+
+    h3 {
+        font-family: "Roboto slab", sans;
+        font-weight: @fs__L;
+        font-weight: 600;
+        line-height: 1.2;
+        
+        margin-bottom: 1rem;
+    }
+
+    > section {
+        min-height: 40vh;
+        align-items: center;
+
+        > .credits {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            margin-bottom: clamp(4rem, calc(2rem + 8vw), 8rem);
+
+            > .author {
+                color: @color_secondary;
+                font-size: @fs__XL;
+            }
+
+            > .curator {
+                font-size: 1.2rem;
+
+                > label {
+                    font-size: .8rem;
+                    color: @color_secondary;
+                    display: block;
+                }
+            }
+        }
+
+        &.about {
+            background: #eee;
+            > p {
+                font-size: @fs__L;
+                margin: 2rem 0;
+            }
+        }
+
+        > p, > div {
+            margin-bottom: 2rem;
+        }
+
+        > .result {
+            position: relative;
+
+            .controls {
+                background: #ccc;
+                padding: .5rem 1rem;
+                box-sizing: border-box;
+
+                font-size: .8rem;
+
+                display: grid;
+                gap: .5rem;
+                align-items: center;
+                grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%),1fr));
+
+                h4 {
+                    padding: 0;
+                    margin: 0;
+                }
+            }
+
+            canvas {
+                border: 1px solid #ccc;
+            }
+            
+            &::after {
+                content: "Вы можете нажать на холст для самостоятельного выбора точек";
+
+                position: absolute;
+                right: .5rem;
+                bottom: 1rem;
+
+                font-size: @fs__S;
+                color: #ccc;
+                padding: 0 20px;
+                background-image: url('../img/icon.svg');
+                background-position: 100% 50%;
+                background-repeat: no-repeat;
+                background-size: 16px;
+            }
+        }
+
+        > .tbd {
+            height: 500px;
+            border: 1px solid #ccc;
+            background: #fafafa;
+
+            display: grid;
+            justify-content: center;
+            align-items: center;
+
+            color: #ccc;
+            font-size: @fs__XXL;
+            text-transform: uppercase;
+            font-weight: 600;
+
+            &::after {
+                display: none;
+            }
+        }
+    }
+
+    footer {
+        background-color: #eee;
+        margin-top: 6rem;
+        padding-bottom: 5rem;
+
+        > h2 {
+            margin-top: clamp(2rem, calc(1rem + 6vw) , 4rem);
+            margin-bottom: clamp(1rem, calc(.5rem + 3vw), 1.5rem);
+        }
+
+        > h3 {
+             margin-top: 1rem;
+             margin-bottom: 0.5rem;
+        }
+
+        > ul {
+            margin: 0;
+            padding: 0 0 0 1.5rem;
+            > li {
+                font-size: @fs__M;
+                color: @color_primary;
+                margin: 0 0 0.5rem 0;
+                padding: 0;
+
+                > a {
+                    display: block;
+                    font-size: @fs__S;
+                }
+            }
+        }          
+    }
+
+}
+
+.content-grid {
+    --gap: clamp(1rem, 6vw, 3rem);
+    --full: minmax(var(--gap), 1fr);
+    --content: e('min(100ch, 100% - var(--gap) * 2)');
+    --feature: minmax(0, 5rem);
+
+    display: grid;
+    grid-template-columns:
+        [full-start] var(--full)
+        [feature-start] var(--feature)
+        [content-start] var(--content) [content-end]
+        var(--feature) [feature-end]
+        var(--full) [full-end];
+
+    > * {
+        grid-column: content;
+    }
+    .full {
+      grid-column: full;
+    }
+}

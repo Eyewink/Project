@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+	<script type="module" src="js/main.js"></script>
+	<title>Тимофей Рукин &mdash; Проектная работа</title>
+</head>
+
+<body class="content-grid">
+
+	<section>
+		<h1>Создание динамической графики с&nbsp;помощью алгоритмов построения кривых</h1>
+		<div class="credits">
+			<div class="author">Рукин Тимофей</div>
+			<div class="curator">
+				<label for="">Куратор</label>
+				Лебедев Дмитрий Алексеевич
+			</div>
+		</div>
+	</section>
+
+	<section class="about full content-grid">
+		<p>Классические алгоритмы построения кривых, такие как кривые Безье, B-сплайны и другие, сохраняют высокую значимость в современном мире благодаря своей универсальности, эффективности и широкому спектру применения. Они лежат в основе многих технологий, от компьютерной графики и CAD-систем до моделирования сложных поверхностей в инженерии и архитектуре.</p>
+	</section>
+
+	<section>
+		<h2>Кривые Безье</h2>
+		<p>Кривые Безье были разработаны в 1960-х годах независимо двумя инженерами: Пьером Безье и Полем де Кастельжо. Они работали над улучшением аэродинамики автомобильных кузовов, что требовало создания плавных и точных кривых. Пьер Безье опубликовал свои результаты в начале 1960-х годов, поэтому кривые получили его имя. Поль де Кастельжо разработал алгоритм для вычисления, но его работы оставались секретными до конца 1960-х.</p>
+		<h3>Построение</h3>
+		<div>
+			Самым популярным способом построения является метод де Кастельжо:
+			<ol>
+				<li>Рисуем опорные точки P<sub>0</sub>, P<sub>1</sub>, ... ,P<sub>n</sub> и соединяем их последовательно отрезками: 
+					P<sub>0</sub> &RightArrow; P<sub>1</sub>
+					P<sub>1</sub> &RightArrow; P<sub>2</sub>
+					&RightArrow; ... &RightArrow; P<sub>n</sub>
+					Получаем ломаную линию.</li>
+				<li>Взять некую переменную t, которая будет меняться от 0 до 1 с определенным интервалом (чем меньше, тем лучше)</li>
+				<li>Для каждой t поставить точку на отрезках, пропорциональную t (при t = 0.5 поставить точку на середине) и соединить их. Получится N-1 отрезков</li>
+				<li>Повторять, пока не останется одна точка</li>
+			</ol>
+		</div>
+
+		<section class="result bezie">
+			<div class="controls">
+				<div>
+					<div>
+						<input type="radio" id="bezie_3x" name="bezie_type" value="3" checked>
+						<label for="bezie_3x">Квадратичная кривая (3 точки)</label>
+					</div>
+					<div>
+						<input type="radio" id="bezie_4x" name="bezie_type" value="4">
+						<label for="bezie_4x">Кубическая кривая (4 точки)</label>
+					</div>
+				</div>
+				<div>
+					<input type="checkbox" name="bezie_support" id="bezie_support" checked="checked">
+					<label for="bezie_support">Отображать построение</label>
+				</div>
+				<div>
+					<input type="button" id="bezie_redraw" value="Перестроить">
+				</div>
+			</div>
+			<canvas id="bezie" width="1000" height="500">
+				Ваш браузер не поддерживает canvas.
+			</canvas>
+		</section>
+
+	</section>
+
+	<section>
+		<h2>B-сплайны</h2>
+		<p>B-сплайны были введены американским математиком Исааком Шенбергом в 1946 году. Термин B-сплайн происходит от «basis spline (базисный сплайн)» . B-сплайны обобщают кривую Безье, позволяя управлять формой кривой с помощью контрольных точек, но при этом алгебраическая степень B-сплайна не зависит от их числа.</p>
+		<h3>Построение</h3>
+		<div><img src="img/bspline.svg" alt="" srcset="" /></div>
+
+		<section class="result bspline">
+	    	<div class="controls">
+				<div>
+					<div>
+						<input type="radio" id="bspline_simple" name="bspline_type" value="simple" checked>
+						<label for="bspline_simple">Элементарная кубическая</label>
+					</div>
+					<div>
+						<input type="radio" id="bspline_complex" name="bspline_type" value="complex">
+						<label for="bspline_complex">Составная</label>
+					</div>
+				</div>
+				<div>
+					<input type="checkbox" name="bspline_auto" id="bspline_auto">
+					<label for="bspline_auto">Достраивать автоматически</label>
+				</div>
+                <div>
+                    <input type="button" id="bspline_redraw" value="Заново">
+                </div>
+            </div>
+			<canvas id="bspline" width="1000" height="500">
+                Ваш браузер не поддерживает canvas.
+            </canvas>
+		</section>
+
+	</section>
+
+	<section>
+		<h2>Кубические сплайны</h2>
+		<p>Кубические сплайны имеют более давнюю историю. Их математическое представление восходит к теории расчета изгиба балок, основы которой заложили Леонард Эйлер и Даниил Бернулли около 1750 года. Кубические сплайны изначально описывали форму упругой линии нагруженной балки. В 1938 году В.Кваде и Л.Коллатц применяли сплайны в своих работах, а в 1946 году году Шенберг впервые использовал термин “сплайн” в математическом контексте.</p>
+
+		<section class="result cube tbd">
+			скоро
+		</section>
+
+	</section>
+
+	<footer class="full content-grid">
+		<h2>Источники</h2>
+		<h3>Литература:</h3>
+		<ul>
+			<li>Е.В.Шикин, А.И.Плис. Кривые и поверхности на экране компьютера. &mdash; М.:«ДИАЛОГ-МИФИ», 1996</li>
+		</ul>
+		<h3>Ссылки:</h3>
+		<ul>
+			<li>Почти всё про кривые Безье <a href="https://learn.javascript.ru/bezier-curve">https://learn.javascript.ru/bezier-curve</a></li>
+			<li>Основные свойства кривой Безье и В-сплайна, также блок теории <a href="https://post.nghiatu.com/ru/tutorial/computer-graphics/computer-graphics-curves/krivye-komp-uternoj-grafiki">https://post.nghiatu.com/ru/tutorial/computer-graphics/computer-graphics-curves/krivye-komp-uternoj-grafiki</a></li>
+			<li>Youtube: Bezier Curves Explained <a href="https://www.youtube.com/watch?v=pnYccz1Ha34">https://www.youtube.com/watch?v=pnYccz1Ha34</a></li>
+			<li>Youtube: The Beauty of Bézier Curves <a href="https://www.youtube.com/watch?v=aVwxzDHniEw">https://www.youtube.com/watch?v=aVwxzDHniEw</a></li>
+			<li>Youtube: Splines in 5 minutes: Part 3 -- B-splines and 2D <a href="https://www.youtube.com/watch?v=JwN43QAlF50">https://www.youtube.com/watch?v=JwN43QAlF50</a></li>
+			<li>Youtube: The Continuity of Splines <a href="https://www.youtube.com/watch?v=jvPPXbo87ds">https://www.youtube.com/watch?v=jvPPXbo87ds</a></li>
+			<li>Youtube: A new approach to container and wrapper classes <a href="https://www.youtube.com/watch?v=c13gpBrnGEw">https://www.youtube.com/watch?v=c13gpBrnGEw</a></li>
+		</ul>
+	</footer>
+</body>
+</html>
