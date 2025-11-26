@@ -3,14 +3,23 @@ enum letters {
 	A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
 }
 
+enum colors {
+	'121,0,201',
+	'255,158,100',
+	'83,219,138',
+	'221,66,245',
+	'143,158,255',
+}
+
 export default class Bezie {
 	private _target: HTMLCanvasElement;
 	private _dots:number = 3;
 	private _data:Dot[] = [];
-	private _support:Boolean = true;
+	private _complex:Boolean = false;
 
 	private _delta:number = 0;
 	private _start:Dot = { x:0, y:0 };
+	private _storage:Dot[] = [];
 
 	private _userClickCouner: number = 0;
 
@@ -24,11 +33,12 @@ export default class Bezie {
 	private _clear = ():void => {
 		const rect = this._target.getBoundingClientRect();
 		this._target.getContext('2d')?.clearRect(0,0,rect.width,rect.height);
-		this._delta = 0;
 	}
 
 	private _reset = ():void => {
 		this._clear();
+		this._delta = 0;
+		this._storage = [];
 
 		this._data = [];
 		for(var i=0; i<this._dots; i++) {
@@ -69,7 +79,7 @@ export default class Bezie {
 		ctx.stroke();
 	}
 
-	private _drawDot = (dot:Dot, text?:string, font?:string) => {
+	private _drawDot = (dot:Dot, text?:string, font?:string, color?:string) => {
 		let ctx = this._target.getContext('2d') as CanvasRenderingContext2D;
 		if(text !== undefined) {
 			ctx.font = font || '13px Arial';
@@ -77,19 +87,22 @@ export default class Bezie {
 			ctx.fillText(text, dot.x, dot.y - 5);
 		}
 		ctx.beginPath();
-		ctx.fillStyle = 'red';
+		ctx.fillStyle = color || 'red';
 		ctx.arc(dot.x, dot.y, 2, 0 , 2*Math.PI);
 		ctx.fill();
 	}
 
-	private _reDraw = () => {
+	private _drawChords = ():void => {
 		for (var i=0 ; i < this._data.length; i++) {
 			if (i>0) {
 				this._drawLine(this._data[i-1], this._data[i],.5,'rgba(0,0,0,.5)');
 			}
 			this._drawDot(this._data[i], letters[i]);
 		}
+	}
 
+	private _reDraw = () => {
+		this._drawChords();		
 		if (this._data.length == this._dots) {
 			this.animation = requestAnimationFrame(this._animate);
 		}
@@ -106,6 +119,8 @@ export default class Bezie {
 
 		this._data.push(dot);
 		this._clear();
+		this._delta = 0;
+		this._storage = [];
 		this._reDraw();
 		this._userClickCouner = (this._userClickCouner + 1) % this._dots;
 	}
@@ -118,59 +133,59 @@ export default class Bezie {
 	}
 
 	private _alg = (data:Dot[], delta:number):Dot => {
-		if(data.length === 1) {
-			return data[0]
+		if(data.length == 1) {
+			return data[0];
 		}
 
 		let _result:Dot[] = [];
 		for(var i=0; i < data.length-1; i++) {
 			_result.push(this._calc(data[i], data[i+1],delta));
 		}
+
+		let _alpha = (this._complex) ? .1 : 1;
+
+		for (var i=1 ; i < _result.length; i++) {
+			this._drawLine(_result[i-1], _result[i],.5,`rgba(${colors[_result.length%5]}, ${_alpha})`);
+		}
+
+		if(!this._complex) {
+			for(var j = 0; j < _result.length ; j++) {
+				this._drawDot(_result[j], '', undefined, `rgb(${colors[_result.length%5]})`);
+			}
+		}
+
 		return this._alg(_result, delta);
 	}
 
 	private _animate = () => {
-		// switch (this._dots) {
-		// 	case 4:
-		// 		var p1 = this._calc(this._data[0], this._data[1], this._delta);
-		// 		var p2 = this._calc(this._data[1], this._data[2], this._delta);
-		// 		var p3 = this._calc(this._data[2], this._data[3], this._delta);
-		// 		var q1 = this._calc(p1,p2,this._delta);
-		// 		var q2 = this._calc(p2,p3,this._delta);
-		// 		var result = this._calc(q1,q2,this._delta);
 
-		// 		if(this._support) {
-		// 			this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
-		// 			this._drawLine(p2,p3,.5,'rgba(102,255,102,.2)');
-		// 			this._drawLine(q1,q2,.5,'rgba(255,102,102,.4)');
-		// 		}
-		// 		this._drawLine(this._start, result, 2);
-		// 		this._start = result;
-		// 		break;
+		if (!this._complex) {
+			this._clear();
+			this._drawChords();
 
-		// 	case 3: {
-		// 		var p1 = this._calc(this._data[0], this._data[1], this._delta);
-		// 		var p2 = this._calc(this._data[1], this._data[2], this._delta);
-		// 		var result = this._calc(p1,p2,this._delta);
+		}
 
-		// 		if(this._support) {
-		// 			this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
-		// 		}
-		// 		this._drawLine(this._start, result, 2);
-		// 		this._start = result;
-		// 		break;         
-		// 	}
-
-		// 	default:
-		// 		break;
-		// }
-
-		var result = this._alg(this._data, this._delta);
-		this._drawLine(this._start, result, 2);
-		this._start = result;
+		var result:Dot = this._alg(this._data, this._delta);
+		
+		if(this._complex) {
+			this._drawLine(this._start, result, 2);
+			this._start = result;
+		} else {
+			this._storage.push(result);
+			for(var i = 0; i< this._storage.length - 1; i++) {
+				this._drawLine(this._storage[i], this._storage[i+1], 2);
+			}
+		}
 
 		if (this._delta > 1) {
 			cancelAnimationFrame(this.animation);
+			if(!this._complex) {
+				this._clear();
+				this._drawChords();
+				for(var i = 0; i< this._storage.length - 1; i++) {
+					this._drawLine(this._storage[i], this._storage[i+1], 2);
+				}
+			}
 		} else {
 			this._delta += 0.01;
 			this.animation = requestAnimationFrame(this._animate);
@@ -194,15 +209,27 @@ export default class Bezie {
 
 	public redraw = () => {
 		this._clear();
+		this._delta = 0;
+		this._storage = [];
 		this._start = this._data[0];
 		this._reDraw();
 	}
 
 	public toggleSupport = () => {
-		this._support = !this._support;
+		this._complex = !this._complex;
 		this._clear();
+		this._delta = 0;
+		this._storage = [];
 		this._start = this._data[0];
 		this._reDraw();
+	}
+
+	public changeDegree = (degree:number) => {
+		this._dots = Math.max(2, degree);
+		this._clear();
+		this._delta = 0;
+		this._storage = [];
+		this._reset();
 	}
 
 	public reset = () => {

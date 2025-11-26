@@ -83,6 +83,9 @@ body > section > div {
 body > section > .result {
   position: relative;
 }
+body > section > .result + .result {
+  margin-top: 2rem;
+}
 body > section > .result .controls {
   background: #ccc;
   padding: 0.5rem 1rem;

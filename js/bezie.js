@@ -27,22 +27,32 @@ var letters;
     letters[letters["Y"] = 24] = "Y";
     letters[letters["Z"] = 25] = "Z";
 })(letters || (letters = {}));
+var colors;
+(function (colors) {
+    colors[colors["121,0,201"] = 0] = "121,0,201";
+    colors[colors["255,158,100"] = 1] = "255,158,100";
+    colors[colors["83,219,138"] = 2] = "83,219,138";
+    colors[colors["221,66,245"] = 3] = "221,66,245";
+    colors[colors["143,158,255"] = 4] = "143,158,255";
+})(colors || (colors = {}));
 export default class Bezie {
     constructor(target) {
-        this._dots = 11;
+        this._dots = 3;
         this._data = [];
-        this._support = true;
+        this._complex = false;
         this._delta = 0;
         this._start = { x: 0, y: 0 };
+        this._storage = [];
         this._userClickCouner = 0;
         this._clear = () => {
             var _a;
             const rect = this._target.getBoundingClientRect();
             (_a = this._target.getContext('2d')) === null || _a === void 0 ? void 0 : _a.clearRect(0, 0, rect.width, rect.height);
-            this._delta = 0;
         };
         this._reset = () => {
             this._clear();
+            this._delta = 0;
+            this._storage = [];
             this._data = [];
             for (var i = 0; i < this._dots; i++) {
                 var dot = this._addPoint();
@@ -76,7 +86,7 @@ export default class Bezie {
             ctx.lineTo(end.x, end.y);
             ctx.stroke();
         };
-        this._drawDot = (dot, text, font) => {
+        this._drawDot = (dot, text, font, color) => {
             let ctx = this._target.getContext('2d');
             if (text !== undefined) {
                 ctx.font = font || '13px Arial';
@@ -84,17 +94,20 @@ export default class Bezie {
                 ctx.fillText(text, dot.x, dot.y - 5);
             }
             ctx.beginPath();
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = color || 'red';
             ctx.arc(dot.x, dot.y, 2, 0, 2 * Math.PI);
             ctx.fill();
         };
-        this._reDraw = () => {
+        this._drawChords = () => {
             for (var i = 0; i < this._data.length; i++) {
                 if (i > 0) {
                     this._drawLine(this._data[i - 1], this._data[i], .5, 'rgba(0,0,0,.5)');
                 }
                 this._drawDot(this._data[i], letters[i]);
             }
+        };
+        this._reDraw = () => {
+            this._drawChords();
             if (this._data.length == this._dots) {
                 this.animation = requestAnimationFrame(this._animate);
             }
@@ -107,6 +120,8 @@ export default class Bezie {
             }
             this._data.push(dot);
             this._clear();
+            this._delta = 0;
+            this._storage = [];
             this._reDraw();
             this._userClickCouner = (this._userClickCouner + 1) % this._dots;
         };
@@ -117,51 +132,49 @@ export default class Bezie {
             };
         };
         this._alg = (data, delta) => {
-            if (data.length === 1) {
+            if (data.length == 1) {
                 return data[0];
             }
             let _result = [];
             for (var i = 0; i < data.length - 1; i++) {
                 _result.push(this._calc(data[i], data[i + 1], delta));
             }
+            let _alpha = (this._complex) ? .1 : 1;
+            for (var i = 1; i < _result.length; i++) {
+                this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
+            }
+            if (!this._complex) {
+                for (var j = 0; j < _result.length; j++) {
+                    this._drawDot(_result[j], '', undefined, `rgb(${colors[_result.length % 5]})`);
+                }
+            }
             return this._alg(_result, delta);
         };
         this._animate = () => {
-            // switch (this._dots) {
-            // 	case 4:
-            // 		var p1 = this._calc(this._data[0], this._data[1], this._delta);
-            // 		var p2 = this._calc(this._data[1], this._data[2], this._delta);
-            // 		var p3 = this._calc(this._data[2], this._data[3], this._delta);
-            // 		var q1 = this._calc(p1,p2,this._delta);
-            // 		var q2 = this._calc(p2,p3,this._delta);
-            // 		var result = this._calc(q1,q2,this._delta);
-            // 		if(this._support) {
-            // 			this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
-            // 			this._drawLine(p2,p3,.5,'rgba(102,255,102,.2)');
-            // 			this._drawLine(q1,q2,.5,'rgba(255,102,102,.4)');
-            // 		}
-            // 		this._drawLine(this._start, result, 2);
-            // 		this._start = result;
-            // 		break;
-            // 	case 3: {
-            // 		var p1 = this._calc(this._data[0], this._data[1], this._delta);
-            // 		var p2 = this._calc(this._data[1], this._data[2], this._delta);
-            // 		var result = this._calc(p1,p2,this._delta);
-            // 		if(this._support) {
-            // 			this._drawLine(p1,p2,.5,'rgba(102,255,102,.2)');
-            // 		}
-            // 		this._drawLine(this._start, result, 2);
-            // 		this._start = result;
-            // 		break;         
-            // 	}
-            // 	default:
-            // 		break;
-            // }
+            if (!this._complex) {
+                this._clear();
+                this._drawChords();
+            }
             var result = this._alg(this._data, this._delta);
-            this._drawLine(this._start, result, 2);
-            this._start = result;
+            if (this._complex) {
+                this._drawLine(this._start, result, 2);
+                this._start = result;
+            }
+            else {
+                this._storage.push(result);
+                for (var i = 0; i < this._storage.length - 1; i++) {
+                    this._drawLine(this._storage[i], this._storage[i + 1], 2);
+                }
+            }
             if (this._delta > 1) {
                 cancelAnimationFrame(this.animation);
+                if (!this._complex) {
+                    this._clear();
+                    this._drawChords();
+                    for (var i = 0; i < this._storage.length - 1; i++) {
+                        this._drawLine(this._storage[i], this._storage[i + 1], 2);
+                    }
+                }
             }
             else {
                 this._delta += 0.01;
@@ -184,14 +197,25 @@ export default class Bezie {
         };
         this.redraw = () => {
             this._clear();
+            this._delta = 0;
+            this._storage = [];
             this._start = this._data[0];
             this._reDraw();
         };
         this.toggleSupport = () => {
-            this._support = !this._support;
+            this._complex = !this._complex;
             this._clear();
+            this._delta = 0;
+            this._storage = [];
             this._start = this._data[0];
             this._reDraw();
+        };
+        this.changeDegree = (degree) => {
+            this._dots = Math.max(2, degree);
+            this._clear();
+            this._delta = 0;
+            this._storage = [];
+            this._reset();
         };
         this.reset = () => {
             this._reset();

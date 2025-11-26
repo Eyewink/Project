@@ -45,7 +45,7 @@
 			</ol>
 		</div>
 
-		<section class="result bezie">
+		<section class="result">
 			<div class="controls">
 				<div>
 					<div>
@@ -59,13 +59,28 @@
 				</div>
 				<div>
 					<input type="checkbox" name="bezie_support" id="bezie_support" checked="checked">
-					<label for="bezie_support">Отображать построение</label>
+					<label for="bezie_support">Очищать вспомогательные линии</label>
 				</div>
 				<div>
 					<input type="button" id="bezie_redraw" value="Перестроить">
 				</div>
 			</div>
 			<canvas id="bezie" width="1000" height="500">
+				Ваш браузер не поддерживает canvas.
+			</canvas>
+		</section>
+
+		<section class="result">
+			<div class="controls">
+				<div>
+					Порядок кривой:&nbsp;
+					<input type="number" name="bezie_Degree" id="" value="7" style="width: 50px;">
+				</div>
+				<div>
+					<input type="button" id="bezie2_redraw" value="Перестроить">
+				</div>
+			</div>
+			<canvas id="bezie2" width="1000" height="500">
 				Ваш браузер не поддерживает canvas.
 			</canvas>
 		</section>
@@ -78,7 +93,7 @@
 		<h3>Построение</h3>
 		<div><img src="img/bspline.svg" alt="" srcset="" /></div>
 
-		<section class="result bspline">
+		<section class="result">
 	    	<div class="controls">
 				<div>
 					<div>
@@ -123,6 +138,7 @@
 		</ul>
 		<h3>Ссылки:</h3>
 		<ul>
+			<li>Сайт, учебник по JavaScript <a href="https://learn.javascript.ru/">https://learn.javascript.ru/</a></li>
 			<li>Почти всё про кривые Безье <a href="https://learn.javascript.ru/bezier-curve">https://learn.javascript.ru/bezier-curve</a></li>
 			<li>Основные свойства кривой Безье и В-сплайна, также блок теории <a href="https://post.nghiatu.com/ru/tutorial/computer-graphics/computer-graphics-curves/krivye-komp-uternoj-grafiki">https://post.nghiatu.com/ru/tutorial/computer-graphics/computer-graphics-curves/krivye-komp-uternoj-grafiki</a></li>
 			<li>Youtube: Bezier Curves Explained <a href="https://www.youtube.com/watch?v=pnYccz1Ha34">https://www.youtube.com/watch?v=pnYccz1Ha34</a></li>
