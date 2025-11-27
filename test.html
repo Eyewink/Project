@@ -48,39 +48,21 @@
 		<section class="result">
 			<div class="controls">
 				<div>
-					<div>
-						<input type="radio" id="bezie_3x" name="bezie_type" value="3" checked>
-						<label for="bezie_3x">Квадратичная кривая (3 точки)</label>
-					</div>
-					<div>
-						<input type="radio" id="bezie_4x" name="bezie_type" value="4">
-						<label for="bezie_4x">Кубическая кривая (4 точки)</label>
-					</div>
+					Порядок кривой:&nbsp;
+					<input type="number" name="bezie_degree" id="" value="7" style="width: 50px;">
 				</div>
 				<div>
 					<input type="checkbox" name="bezie_support" id="bezie_support" checked="checked">
-					<label for="bezie_support">Очищать вспомогательные линии</label>
+					<label for="bezie_support">Очищать линии</label>
 				</div>
 				<div>
 					<input type="button" id="bezie_redraw" value="Перестроить">
 				</div>
+				<div>
+                    <input type="button" id="bezie_reset" value="Заново">
+                </div>
 			</div>
 			<canvas id="bezie" width="1000" height="500">
-				Ваш браузер не поддерживает canvas.
-			</canvas>
-		</section>
-
-		<section class="result">
-			<div class="controls">
-				<div>
-					Порядок кривой:&nbsp;
-					<input type="number" name="bezie_Degree" id="" value="7" style="width: 50px;">
-				</div>
-				<div>
-					<input type="button" id="bezie2_redraw" value="Перестроить">
-				</div>
-			</div>
-			<canvas id="bezie2" width="1000" height="500">
 				Ваш браузер не поддерживает canvas.
 			</canvas>
 		</section>
@@ -110,7 +92,7 @@
 					<label for="bspline_auto">Достраивать автоматически</label>
 				</div>
                 <div>
-                    <input type="button" id="bspline_redraw" value="Заново">
+                    <input type="button" id="bspline_reset" value="Заново">
                 </div>
             </div>
 			<canvas id="bspline" width="1000" height="500">

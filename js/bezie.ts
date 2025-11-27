@@ -162,16 +162,15 @@ export default class Bezie {
 		if (!this._complex) {
 			this._clear();
 			this._drawChords();
-
 		}
 
 		var result:Dot = this._alg(this._data, this._delta);
-		
+		this._storage.push(result);
+
 		if(this._complex) {
 			this._drawLine(this._start, result, 2);
 			this._start = result;
 		} else {
-			this._storage.push(result);
 			for(var i = 0; i< this._storage.length - 1; i++) {
 				this._drawLine(this._storage[i], this._storage[i+1], 2);
 			}
@@ -182,9 +181,9 @@ export default class Bezie {
 			if(!this._complex) {
 				this._clear();
 				this._drawChords();
-				for(var i = 0; i< this._storage.length - 1; i++) {
+			}
+			for(var i = 0; i< this._storage.length - 1; i++) {
 					this._drawLine(this._storage[i], this._storage[i+1], 2);
-				}
 			}
 		} else {
 			this._delta += 0.01;

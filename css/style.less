@@ -117,10 +117,6 @@ body {
         > .result {
             position: relative;
 
-            + .result {
-                margin-top: 2rem;
-            }
-
             .controls {
                 background: #ccc;
                 padding: .5rem 1rem;
@@ -131,7 +127,7 @@ body {
                 display: grid;
                 gap: .5rem;
                 align-items: center;
-                grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%),1fr));
+                grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
 
                 h4 {
                     padding: 0;
