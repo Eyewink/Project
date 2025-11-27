@@ -48,7 +48,7 @@
 			<div class="controls">
 				<div>
 					Порядок кривой:&nbsp;
-					<input type="number" name="bezie_degree" id="" value="7" style="width: 50px;">
+					<input type="number" name="bezie_degree" id="" value="2" style="width: 50px;">
 				</div>
 				<div>
 					<input type="checkbox" name="bezie_support" id="bezie_support" checked="checked">
@@ -91,7 +91,7 @@
 					<label for="bspline_auto">Достраивать автоматически</label>
 				</div>
                 <div>
-                    <input type="button" id="bspline_redraw" value="Заново">
+                    <input type="button" id="bspline_reset" value="Заново">
                 </div>
             </div>
 			<canvas id="bspline" width="1000" height="500">
@@ -175,7 +175,6 @@
 			const canvas_bezie = document.getElementById('bezie');
 			const canvas_bspline = document.getElementById('bspline');
 			const bezie = new Bezie(canvas_bezie);
-			bezie.changeDegree(8);
 			const bspline = new Bspline(canvas_bspline);
 			const parent = document.querySelector('body > section');
 			let _width;

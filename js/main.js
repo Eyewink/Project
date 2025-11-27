@@ -5,7 +5,6 @@ var init = () => {
     const canvas_bezie = document.getElementById('bezie');
     const canvas_bspline = document.getElementById('bspline');
     const bezie = new Bezie(canvas_bezie);
-    bezie.changeDegree(8);
     const bspline = new Bspline(canvas_bspline);
     const parent = document.querySelector('body > section');
     let _width;
