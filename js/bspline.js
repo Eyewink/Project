@@ -36,7 +36,7 @@ export default class Bspline {
         this._start = { x: 0, y: 0 };
         this._userClickCouner = 0;
         this._autoConstract = false;
-        this.speed = 100;
+        this._speed = 100;
         this._clear = () => {
             var _a;
             const rect = this._target.getBoundingClientRect();
@@ -182,7 +182,7 @@ export default class Bspline {
                 }
             }
             else {
-                this._delta += (0.01 * this.speed / 100);
+                this._delta += 1 / (200 - this._speed);
                 this.animation = requestAnimationFrame(this._animate);
             }
         };
@@ -215,6 +215,10 @@ export default class Bspline {
         this.clear = () => {
             cancelAnimationFrame(this.animation);
             this._clear();
+        };
+        this.setSpeed = (value) => {
+            value = Math.max(Math.min(value, 100), 0);
+            this._speed = value;
         };
         this._target = target;
         this.init();

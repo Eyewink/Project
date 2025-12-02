@@ -51,6 +51,10 @@
 					Порядок кривой:&nbsp;
 					<input type="number" name="bezie_degree" id="" value="2" style="width: 50px;">
 				</div>
+				<div class="middle">
+					<label for="bezie_speed">Скорость:&nbsp;</label>
+					<input type="range" name="bezie_speed" id="bezie_speed" min="0" max="100" value="100" step="10">
+				</div>
 				<div>
 					<input type="checkbox" name="bezie_support" id="bezie_support_btn" checked="checked">
 					<label for="bezie_support_btn">Очищать линии</label>
@@ -63,13 +67,6 @@
                 </div>
 				<div>
 					<input type="button" id="bezie_demo_btn" value="Демо">
-				</div>
-				<div>
-					<label for="bezie_speed">Скорость</label>
-					<input type="range" name="bezie_speed" id="bezie_speed" min="0" max="100" value="100" step="1">
-				</div>
-				<div>
-					<input type="button" id="bezie_clear" value="Очистить">
 				</div>
 			</div>
 			<canvas id="bezie" width="1000" height="500">
@@ -97,6 +94,10 @@
 						<label for="bspline_complex">Составная</label>
 					</div>
 				</div>
+				<div class="middle">
+					<label for="bspline_speed">Скорость:&nbsp;</label>
+					<input type="range" name="bspline_speed" id="bspline_speed" min="0" max="100" value="100" step="20">
+				</div>
 				<div>
 					<input type="checkbox" name="bspline_auto" id="bspline_auto_btn">
 					<label for="bspline_auto_btn">Достраивать автоматически</label>
@@ -104,13 +105,6 @@
                 <div>
                     <input type="button" id="bspline_reset_btn" value="Заново">
                 </div>
-				<div>
-					<label for="bspline_speed">Скорость</label>
-					<input type="range" name="bspline_speed" id="bspline_speed" min="0" max="100" value="100" step="1">
-				</div>
-				<div>
-					<input type="button" id="bspline_clear" value="Очистить">
-				</div>
             </div>
 			<canvas id="bspline" width="1000" height="500">
                 Ваш браузер не поддерживает canvas.

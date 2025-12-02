@@ -38,7 +38,7 @@
 					P<sub>1</sub> &RightArrow; P<sub>2</sub>
 					&RightArrow; ... &RightArrow; P<sub>n</sub>
 					Получаем ломаную линию.</li>
-				<li>Взять некую переменную t, которая будет меняться от 0 до 1 с определенным интервалом (чем меньше, тем лучше)</li>
+				<li>Взять некую переменную t, которая будет меняться от 0 до 1 с определенным интервалом (чем меньше, тем точнее)</li>
 				<li>Для каждой t поставить точку на отрезках, пропорциональную t (при t = 0.5 поставить точку на середине) и соединить их. Получится N-1 отрезков</li>
 				<li>Повторять, пока не останется одна точка</li>
 			</ol>
@@ -50,16 +50,23 @@
 					Порядок кривой:&nbsp;
 					<input type="number" name="bezie_degree" id="" value="2" style="width: 50px;">
 				</div>
-				<div>
-					<input type="checkbox" name="bezie_support" id="bezie_support" checked="checked">
-					<label for="bezie_support">Очищать линии</label>
+				<div class="middle">
+					<label for="bezie_speed">Скорость:&nbsp;</label>
+					<input type="range" name="bezie_speed" id="bezie_speed" min="0" max="100" value="100" step="10">
 				</div>
 				<div>
-					<input type="button" id="bezie_redraw" value="Перестроить">
+					<input type="checkbox" name="bezie_support" id="bezie_support_btn" checked="checked">
+					<label for="bezie_support_btn">Очищать линии</label>
 				</div>
 				<div>
-                    <input type="button" id="bezie_reset" value="Заново">
+					<input type="button" id="bezie_redraw_btn" value="Перестроить">
+				</div>
+				<div>
+                    <input type="button" id="bezie_reset_btn" value="Заново">
                 </div>
+				<div>
+					<input type="button" id="bezie_demo_btn" value="Демо">
+				</div>
 			</div>
 			<canvas id="bezie" width="1000" height="500">
 				Ваш браузер не поддерживает canvas.
@@ -86,12 +93,16 @@
 						<label for="bspline_complex">Составная</label>
 					</div>
 				</div>
+				<div class="middle">
+					<label for="bspline_speed">Скорость:&nbsp;</label>
+					<input type="range" name="bspline_speed" id="bspline_speed" min="0" max="100" value="100" step="20">
+				</div>
 				<div>
-					<input type="checkbox" name="bspline_auto" id="bspline_auto">
-					<label for="bspline_auto">Достраивать автоматически</label>
+					<input type="checkbox" name="bspline_auto" id="bspline_auto_btn">
+					<label for="bspline_auto_btn">Достраивать автоматически</label>
 				</div>
                 <div>
-                    <input type="button" id="bspline_reset" value="Заново">
+                    <input type="button" id="bspline_reset_btn" value="Заново">
                 </div>
             </div>
 			<canvas id="bspline" width="1000" height="500">
@@ -129,6 +140,13 @@
 			<li>Youtube: A new approach to container and wrapper classes <a href="https://www.youtube.com/watch?v=c13gpBrnGEw">https://www.youtube.com/watch?v=c13gpBrnGEw</a></li>
 		</ul>
 	</footer>
+
+	<div class="demo">
+		<canvas id="bezie_demo" width="1000" height="500">
+			Ваш браузер не поддерживает canvas.
+        </canvas>
+	</div>
+
 	<script type="module" defer>
 
 		var letters;
@@ -168,62 +186,12 @@
 			colors[colors["83,219,138"] = 2] = "83,219,138";
 			colors[colors["221,66,245"] = 3] = "221,66,245";
 			colors[colors["143,158,255"] = 4] = "143,158,255";
+			colors[colors["255, 241, 0"] = 5] = "255, 241, 0";
+			colors[colors["255, 140, 0"] = 6] = "255, 140, 0";
+			colors[colors["155, 17, 35"] = 7] = "155, 17, 35";
+			colors[colors["104, 33, 122"] = 8] = "104, 33, 122";
+			colors[colors["186, 216, 10"] = 9] = "186, 216, 10";
 		})(colors || (colors = {}));
-
-		var init = () => {
-			var _a, _b, _c, _d, _e, _f;
-			const canvas_bezie = document.getElementById('bezie');
-			const canvas_bspline = document.getElementById('bspline');
-			const bezie = new Bezie(canvas_bezie);
-			const bspline = new Bspline(canvas_bspline);
-			const parent = document.querySelector('body > section');
-			let _width;
-			function resizeCanvas() {
-				if ((parent === null || parent === void 0 ? void 0 : parent.clientWidth) != _width) {
-					_width = parent === null || parent === void 0 ? void 0 : parent.clientWidth;
-					if (canvas_bezie !== null)
-						canvas_bezie.width = (_width || 1000) - 2;
-					if (canvas_bspline !== null)
-						canvas_bspline.width = (_width || 1000) - 2;
-					bezie.redraw();
-					bspline.reset();
-				}
-			}
-			bezie.reset();
-			bspline.reset();
-			resizeCanvas();
-			window.addEventListener('resize', resizeCanvas);
-			(_a = document.querySelector('input[name="bezie_degree"]')) === null || _a === void 0 ? void 0 : _a.addEventListener('input', function (e) {
-				const input = e.target;
-				const value = input.value.replace(/\D/g, '');
-				const numb = Math.min(17, parseInt(value));
-				input.value = numb.toString();
-				bezie.changeDegree(parseInt(input === null || input === void 0 ? void 0 : input.value) + 1);
-			});
-			(_b = document.querySelector('#bezie_redraw')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function (e) {
-				bezie.redraw();
-			});
-			(_c = document.querySelector('#bezie_reset')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (e) {
-				bezie.reset();
-			});
-			(_d = document.querySelector('#bezie_support')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
-				bezie.toggleSupport();
-			});
-			document.querySelectorAll('input[name="bspline_type"]').forEach(radio => {
-				radio.addEventListener('change', function (e) {
-					let value = e.target.value;
-					bspline.changeType(value);
-				});
-			});
-			(_e = document.querySelector('#bspline_reset')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', function (e) {
-				bspline.reset();
-			});
-			(_f = document.querySelector('#bspline_auto')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', function (e) {
-				bspline.toggleSupport();
-			});
-		};
-		//document.addEventListener('DOMContentLoaded', init);
-		window.addEventListener('load', init);
 
 		class Bezie {
 			constructor(target) {
@@ -234,6 +202,7 @@
 				this._start = { x: 0, y: 0 };
 				this._storage = [];
 				this._userClickCouner = 0;
+				this._speed = 100;
 				this._clear = () => {
 					var _a;
 					const rect = this._target.getBoundingClientRect();
@@ -243,6 +212,7 @@
 					this._clear();
 					this._delta = 0;
 					this._storage = [];
+					cancelAnimationFrame(this.animation);
 					this._data = [];
 					for (var i = 0; i < this._dots; i++) {
 						var dot = this._addPoint();
@@ -331,7 +301,9 @@
 					}
 					let _alpha = (this._complex) ? .1 : 1;
 					for (var i = 1; i < _result.length; i++) {
-						this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
+						if (_result.length > 1) {
+							this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
+						}
 					}
 					if (!this._complex) {
 						for (var j = 0; j < _result.length; j++) {
@@ -367,9 +339,44 @@
 						}
 					}
 					else {
-						this._delta += 0.01;
+						this._delta += (1 / (200 - this._speed));
 						this.animation = requestAnimationFrame(this._animate);
 					}
+				};
+				this._demo_alg = (data, delta) => {
+					let _result = [];
+					for (var i = 0; i < data.length - 1; i++) {
+						_result.push(this._calc(data[i], data[i + 1], delta));
+					}
+					if (_result.length > 1) {
+						if (_result.length < this._data.length - 1) {
+							for (var i = 1; i < _result.length; i++) {
+								this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 10]}, .2)`);
+							}
+						}
+						this._demo_alg(_result, delta);
+					}
+				};
+				this._demo_animate = () => {
+					this._demo_alg(this._data, this._delta);
+					if (this._delta > .8) {
+						cancelAnimationFrame(this.animation);
+					}
+					else {
+						this._delta += 0.005;
+						this.animation = requestAnimationFrame(this._demo_animate);
+					}
+				};
+				this._demo_start = () => {
+					this._clear();
+					this._delta = 0.2;
+					this._dots = 5 + Math.floor(12 * Math.random());
+					this._data = [];
+					for (var i = 0; i < this._dots; i++) {
+						var dot = this._addPoint();
+						this._data.push(dot);
+					}
+					this.animation = requestAnimationFrame(this._demo_animate);
 				};
 				this.changeType = (type) => {
 					switch (type) {
@@ -410,6 +417,22 @@
 				this.reset = () => {
 					this._reset();
 				};
+				this.demo = () => {
+					this._demo_start();
+					clearInterval(this._demo_interval);
+					this._demo_interval = setInterval(this._demo_start, 2500);
+				};
+				this.stop = () => {
+					clearInterval(this._demo_interval);
+				};
+				this.clear = () => {
+					cancelAnimationFrame(this.animation);
+					this._clear();
+				};
+				this.setSpeed = (value) => {
+					value = Math.max(Math.min(value, 100), 0);
+					this._speed = value;
+				};
 				this._target = target;
 				this.init();
 			}
@@ -424,6 +447,7 @@
 				this._start = { x: 0, y: 0 };
 				this._userClickCouner = 0;
 				this._autoConstract = false;
+				this._speed = 100;
 				this._clear = () => {
 					var _a;
 					const rect = this._target.getBoundingClientRect();
@@ -569,7 +593,7 @@
 						}
 					}
 					else {
-						this._delta += 0.01;
+						this._delta += 1 / (200 - this._speed);
 						this.animation = requestAnimationFrame(this._animate);
 					}
 				};
@@ -599,11 +623,104 @@
 				this.reset = () => {
 					this._reset();
 				};
+				this.clear = () => {
+					cancelAnimationFrame(this.animation);
+					this._clear();
+				};
+				this.setSpeed = (value) => {
+					value = Math.max(Math.min(value, 100), 0);
+					this._speed = value;
+				};
 				this._target = target;
 				this.init();
 			}
 		}
 
+		var init = () => {
+			var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+			const canvas_bezie = document.getElementById('bezie');
+			const canvas_bezie_demo = document.getElementById('bezie_demo');
+			const canvas_bspline = document.getElementById('bspline');
+			const bezie = new Bezie(canvas_bezie);
+			const bezie_demo = new Bezie(canvas_bezie_demo);
+			const bspline = new Bspline(canvas_bspline);
+			const parent = document.querySelector('body > section');
+			let _width;
+			function resizeCanvas() {
+				if ((parent === null || parent === void 0 ? void 0 : parent.clientWidth) != _width) {
+					_width = parent === null || parent === void 0 ? void 0 : parent.clientWidth;
+					if (canvas_bezie !== null)
+						canvas_bezie.width = (_width || 1000) - 2;
+					if (canvas_bspline !== null)
+						canvas_bspline.width = (_width || 1000) - 2;
+					if (canvas_bezie_demo !== null) {
+						canvas_bezie_demo.width = window.innerWidth;
+						canvas_bezie_demo.height = window.innerHeight;
+					}
+					bezie.redraw();
+					bspline.reset();
+				}
+			}
+			bezie.reset();
+			bspline.reset();
+			bezie_demo.toggleSupport();
+			resizeCanvas();
+			window.addEventListener('resize', resizeCanvas);
+			(_a = document.querySelector('input[name="bezie_degree"]')) === null || _a === void 0 ? void 0 : _a.addEventListener('input', function (e) {
+				const input = e.target;
+				const value = input.value.replace(/\D/g, '');
+				const numb = Math.min(17, parseInt(value));
+				input.value = numb.toString();
+				bezie.changeDegree(parseInt(input === null || input === void 0 ? void 0 : input.value) + 1);
+			});
+			(_b = document.querySelector('#bezie_redraw_btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function (e) {
+				bezie.redraw();
+			});
+			(_c = document.querySelector('#bezie_reset_btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (e) {
+				bezie.reset();
+			});
+			(_d = document.querySelector('#bezie_support_btn')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
+				bezie.toggleSupport();
+			});
+			(_e = document.querySelector('#bezie_demo_btn')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', function (e) {
+				var _a;
+				(_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
+				bezie_demo.demo();
+			});
+			(_f = document.querySelector('#bezie_speed')) === null || _f === void 0 ? void 0 : _f.addEventListener('input', function (e) {
+				const input = e.target;
+				bezie.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
+			});
+			// document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
+			// 	bezie.clear();
+			// });
+			(_g = document.querySelector('.demo')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', function (e) {
+				var _a;
+				(_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
+				bezie_demo.stop();
+			});
+			document.querySelectorAll('input[name="bspline_type"]').forEach(radio => {
+				radio.addEventListener('change', function (e) {
+					let value = e.target.value;
+					bspline.changeType(value);
+				});
+			});
+			(_h = document.querySelector('#bspline_reset_btn')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', function (e) {
+				bspline.reset();
+			});
+			(_j = document.querySelector('#bspline_auto_btn')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', function (e) {
+				bspline.toggleSupport();
+			});
+			(_k = document.querySelector('#bspline_speed')) === null || _k === void 0 ? void 0 : _k.addEventListener('input', function (e) {
+				const input = e.target;
+				bspline.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
+			});
+			// document.querySelector('#bspline_clear')?.addEventListener('click', function(e) {
+			// 	bspline.clear();
+			// });
+		};
+		//document.addEventListener('DOMContentLoaded', init);
+		window.addEventListener('load', init);
 	</script>
 </body>
 </html>

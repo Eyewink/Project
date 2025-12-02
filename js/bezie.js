@@ -49,7 +49,7 @@ export default class Bezie {
         this._start = { x: 0, y: 0 };
         this._storage = [];
         this._userClickCouner = 0;
-        this.speed = 100;
+        this._speed = 100;
         this._clear = () => {
             var _a;
             const rect = this._target.getBoundingClientRect();
@@ -85,7 +85,7 @@ export default class Bezie {
             };
         };
         this._drawLine = (start, end, lineWidth, strokeStyle) => {
-            let ctx = this._target.getContext('2d');
+            const ctx = this._target.getContext('2d');
             ctx.beginPath();
             ctx.lineWidth = lineWidth || 1;
             ctx.strokeStyle = strokeStyle || 'rgba(51, 102, 255, 1)';
@@ -148,7 +148,9 @@ export default class Bezie {
             }
             let _alpha = (this._complex) ? .1 : 1;
             for (var i = 1; i < _result.length; i++) {
-                this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
+                if (_result.length > 1) {
+                    this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
+                }
             }
             if (!this._complex) {
                 for (var j = 0; j < _result.length; j++) {
@@ -184,7 +186,7 @@ export default class Bezie {
                 }
             }
             else {
-                this._delta += (0.01 * this.speed / 100);
+                this._delta += (1 / (200 - this._speed));
                 this.animation = requestAnimationFrame(this._animate);
             }
         };
@@ -273,6 +275,10 @@ export default class Bezie {
         this.clear = () => {
             cancelAnimationFrame(this.animation);
             this._clear();
+        };
+        this.setSpeed = (value) => {
+            value = Math.max(Math.min(value, 100), 0);
+            this._speed = value;
         };
         this._target = target;
         this.init();

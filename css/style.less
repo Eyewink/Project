@@ -124,10 +124,15 @@ body {
 
                 font-size: .8rem;
 
-                display: grid;
-                gap: .5rem;
+                display: flex;
+                flex-wrap: wrap;
+                gap: .5rem 1.5rem;
                 align-items: center;
-                grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+
+                > div.middle {
+                    display: flex;
+                    align-items: center;
+                }
 
                 h4 {
                     padding: 0;

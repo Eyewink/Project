@@ -60,13 +60,15 @@ var init = ():void => {
 		document.querySelector('.demo')?.classList.add('visible');
 		bezie_demo.demo();
 	});
+
 	document.querySelector('#bezie_speed')?.addEventListener('input',function(e){
 		const input = e.target as HTMLInputElement;
-		bezie.speed = parseInt(input?.value);
+		bezie.setSpeed(parseInt(input?.value));
 	});
-	document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
-		bezie.clear();
-	});
+	// document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
+	// 	bezie.clear();
+	// });
+
 	document.querySelector('.demo')?.addEventListener('click', function(e) {
 		document.querySelector('.demo')?.classList.remove('visible');
 		bezie_demo.stop();
@@ -86,13 +88,15 @@ var init = ():void => {
 	document.querySelector('#bspline_auto_btn')?.addEventListener('click', function(e) {
 		bspline.toggleSupport();
 	});
+
 	document.querySelector('#bspline_speed')?.addEventListener('input',function(e){
 		const input = e.target as HTMLInputElement;
-		bspline.speed = parseInt(input?.value);
+		bspline.setSpeed(parseInt(input?.value));
 	});
-	document.querySelector('#bspline_clear')?.addEventListener('click', function(e) {
-		bspline.clear();
-	});
+
+	// document.querySelector('#bspline_clear')?.addEventListener('click', function(e) {
+	// 	bspline.clear();
+	// });
 }
 
 //document.addEventListener('DOMContentLoaded', init);

@@ -30,7 +30,8 @@ export default class Bezie {
 
 	private animation:any;
 	private _demo_interval:any;
-	public speed:number = 100;
+	private _speed:number = 100;
+
 	constructor (target:HTMLCanvasElement) {
 		this._target = target;
 		this.init();
@@ -77,7 +78,7 @@ export default class Bezie {
 	}
 
 	private _drawLine = (start:Dot, end:Dot, lineWidth?:number, strokeStyle?:string) => {
-		let ctx = this._target.getContext('2d') as CanvasRenderingContext2D;
+		const ctx = this._target.getContext('2d') as CanvasRenderingContext2D;
 		ctx.beginPath();
 		ctx.lineWidth = lineWidth || 1;
 		ctx.strokeStyle = strokeStyle || 'rgba(51, 102, 255, 1)';
@@ -152,7 +153,9 @@ export default class Bezie {
 		let _alpha = (this._complex) ? .1 : 1;
 
 		for (var i=1 ; i < _result.length; i++) {
-			this._drawLine(_result[i-1], _result[i],.5,`rgba(${colors[_result.length%5]}, ${_alpha})`);
+			if(_result.length > 1) {
+				this._drawLine(_result[i-1], _result[i],.5,`rgba(${colors[_result.length%5]}, ${_alpha})`);
+			}
 		}
 
 		if(!this._complex) {
@@ -193,7 +196,7 @@ export default class Bezie {
 					this._drawLine(this._storage[i], this._storage[i+1], 2);
 			}
 		} else {
-			this._delta += (0.01*this.speed/100);
+			this._delta += (1 / (200 - this._speed));
 			this.animation = requestAnimationFrame(this._animate);
 		}
 	}
@@ -300,6 +303,11 @@ export default class Bezie {
 	public clear = () => {
 		cancelAnimationFrame(this.animation);
 		this._clear();
+	}
+
+	public setSpeed = (value:number) => {
+		value = Math.max(Math.min(value, 100), 0);
+		this._speed = value;
 	}
 
 }
