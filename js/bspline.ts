@@ -16,7 +16,7 @@ export default class Bspline {
 	private _autoConstract:boolean = false;
 
 	private animation: any;
-
+	public speed:number = 100;
 	constructor (target:HTMLCanvasElement) {
 		this._target = target;
 		this.init();
@@ -189,7 +189,7 @@ export default class Bspline {
 					break;
 			}
 		} else {
-			this._delta += 0.01;
+			this._delta += (0.01*this.speed/100);
 			this.animation = requestAnimationFrame(this._animate);
 		}
 	}
@@ -221,5 +221,9 @@ export default class Bspline {
 
 	public reset = () => {
 	 	this._reset();
+	}
+	public clear = () => {
+		cancelAnimationFrame(this.animation);
+		this._clear();
 	}
 }

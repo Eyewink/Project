@@ -30,7 +30,7 @@ export default class Bezie {
 
 	private animation:any;
 	private _demo_interval:any;
-
+	public speed:number = 100;
 	constructor (target:HTMLCanvasElement) {
 		this._target = target;
 		this.init();
@@ -193,7 +193,7 @@ export default class Bezie {
 					this._drawLine(this._storage[i], this._storage[i+1], 2);
 			}
 		} else {
-			this._delta += 0.01;
+			this._delta += (0.01*this.speed/100);
 			this.animation = requestAnimationFrame(this._animate);
 		}
 	}
@@ -295,6 +295,11 @@ export default class Bezie {
 
 	public stop = () => {
 		clearInterval(this._demo_interval);
+	}
+
+	public clear = () => {
+		cancelAnimationFrame(this.animation);
+		this._clear();
 	}
 
 }

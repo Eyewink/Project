@@ -49,6 +49,7 @@ export default class Bezie {
         this._start = { x: 0, y: 0 };
         this._storage = [];
         this._userClickCouner = 0;
+        this.speed = 100;
         this._clear = () => {
             var _a;
             const rect = this._target.getBoundingClientRect();
@@ -183,7 +184,7 @@ export default class Bezie {
                 }
             }
             else {
-                this._delta += 0.01;
+                this._delta += (0.01 * this.speed / 100);
                 this.animation = requestAnimationFrame(this._animate);
             }
         };
@@ -268,6 +269,10 @@ export default class Bezie {
         };
         this.stop = () => {
             clearInterval(this._demo_interval);
+        };
+        this.clear = () => {
+            cancelAnimationFrame(this.animation);
+            this._clear();
         };
         this._target = target;
         this.init();

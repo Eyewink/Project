@@ -1,7 +1,7 @@
 import Bezie from './bezie.js';
 import Bspline from './bspline.js';
 var init = () => {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     const canvas_bezie = document.getElementById('bezie');
     const canvas_bezie_demo = document.getElementById('bezie_demo');
     const canvas_bspline = document.getElementById('bspline');
@@ -51,7 +51,14 @@ var init = () => {
         (_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
         bezie_demo.demo();
     });
-    (_f = document.querySelector('.demo')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', function (e) {
+    (_f = document.querySelector('#bezie_speed')) === null || _f === void 0 ? void 0 : _f.addEventListener('input', function (e) {
+        const input = e.target;
+        bezie.speed = parseInt(input === null || input === void 0 ? void 0 : input.value);
+    });
+    (_g = document.querySelector('#bezie_clear')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', function (e) {
+        bezie.clear();
+    });
+    (_h = document.querySelector('.demo')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', function (e) {
         var _a;
         (_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
         bezie_demo.stop();
@@ -62,11 +69,18 @@ var init = () => {
             bspline.changeType(value);
         });
     });
-    (_g = document.querySelector('#bspline_reset_btn')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', function (e) {
+    (_j = document.querySelector('#bspline_reset_btn')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', function (e) {
         bspline.reset();
     });
-    (_h = document.querySelector('#bspline_auto_btn')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', function (e) {
+    (_k = document.querySelector('#bspline_auto_btn')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function (e) {
         bspline.toggleSupport();
+    });
+    (_l = document.querySelector('#bspline_speed')) === null || _l === void 0 ? void 0 : _l.addEventListener('input', function (e) {
+        const input = e.target;
+        bspline.speed = parseInt(input === null || input === void 0 ? void 0 : input.value);
+    });
+    (_m = document.querySelector('#bspline_clear')) === null || _m === void 0 ? void 0 : _m.addEventListener('click', function (e) {
+        bspline.clear();
     });
 };
 //document.addEventListener('DOMContentLoaded', init);
