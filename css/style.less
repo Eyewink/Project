@@ -127,7 +127,7 @@ body {
                 display: grid;
                 gap: .5rem;
                 align-items: center;
-                grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
 
                 h4 {
                     padding: 0;
@@ -206,6 +206,20 @@ body {
                 }
             }
         }          
+    }
+
+    > .demo {
+        display: none;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        top: 0;
+        left: 0;
+
+        &.visible {
+            display: block;
+        }
     }
 
 }

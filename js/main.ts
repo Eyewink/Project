@@ -3,9 +3,11 @@ import Bspline from './bspline.js';
 
 var init = ():void => {
 	const canvas_bezie = document.getElementById('bezie') as HTMLCanvasElement;
+	const canvas_bezie_demo = document.getElementById('bezie_demo') as HTMLCanvasElement;
 	const canvas_bspline = document.getElementById('bspline') as HTMLCanvasElement;
 
 	const bezie = new Bezie(canvas_bezie);
+	const bezie_demo = new Bezie(canvas_bezie_demo);
 	const bspline = new Bspline(canvas_bspline);
 
 	const parent = document.querySelector('body > section');
@@ -16,6 +18,10 @@ var init = ():void => {
 			_width = parent?.clientWidth;
 			if (canvas_bezie !== null) canvas_bezie.width = (_width || 1000) - 2;
 			if (canvas_bspline !== null) canvas_bspline.width = (_width || 1000) - 2;
+			if (canvas_bezie_demo !== null) {
+				canvas_bezie_demo.width = window.innerWidth;
+				canvas_bezie_demo.height = window.innerHeight;
+			}
 			bezie.redraw();
 			bspline.reset();
 		}
@@ -23,6 +29,7 @@ var init = ():void => {
 
 	bezie.reset();
 	bspline.reset();
+	bezie_demo.toggleSupport();
 
 	resizeCanvas();
 
@@ -36,18 +43,27 @@ var init = ():void => {
 		bezie.changeDegree(parseInt(input?.value) + 1);
 	});
 
-	document.querySelector('#bezie_redraw')?.addEventListener('click', function(e) {
+	document.querySelector('#bezie_redraw_btn')?.addEventListener('click', function(e) {
 		bezie.redraw();
 	});
 
-	document.querySelector('#bezie_reset')?.addEventListener('click', function(e) {
+	document.querySelector('#bezie_reset_btn')?.addEventListener('click', function(e) {
 		bezie.reset();
 	});
 
-	document.querySelector('#bezie_support')?.addEventListener('click', function(e) {
+	document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
 		bezie.toggleSupport();
 	});
 
+	document.querySelector('#bezie_demo_btn')?.addEventListener('click', function(e) {
+		document.querySelector('.demo')?.classList.add('visible');
+		bezie_demo.demo();
+	});
+
+	document.querySelector('.demo')?.addEventListener('click', function(e) {
+		document.querySelector('.demo')?.classList.remove('visible');
+		bezie_demo.stop();
+	});
 
 	document.querySelectorAll('input[name="bspline_type"]').forEach(radio => {
 		radio.addEventListener('change', function(e:Event) {
@@ -56,11 +72,11 @@ var init = ():void => {
 		});
 	});
 
-	document.querySelector('#bspline_reset')?.addEventListener('click', function(e) {
+	document.querySelector('#bspline_reset_btn')?.addEventListener('click', function(e) {
         bspline.reset();
     });
 
-	document.querySelector('#bspline_auto')?.addEventListener('click', function(e) {
+	document.querySelector('#bspline_auto_btn')?.addEventListener('click', function(e) {
 		bspline.toggleSupport();
 	});
 

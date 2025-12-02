@@ -9,6 +9,11 @@ enum colors {
 	'83,219,138',
 	'221,66,245',
 	'143,158,255',
+	'255, 241, 0',
+	'255, 140, 0',
+	'155, 17, 35',
+	'104, 33, 122',
+	'186, 216, 10'
 }
 
 export default class Bezie {
@@ -21,9 +26,10 @@ export default class Bezie {
 	private _start:Dot = { x:0, y:0 };
 	private _storage:Dot[] = [];
 
-	private _userClickCouner: number = 0;
+	private _userClickCouner:number = 0;
 
-	private animation: any;
+	private animation:any;
+	private _demo_interval:any;
 
 	constructor (target:HTMLCanvasElement) {
 		this._target = target;
@@ -39,6 +45,7 @@ export default class Bezie {
 		this._clear();
 		this._delta = 0;
 		this._storage = [];
+		cancelAnimationFrame(this.animation);
 
 		this._data = [];
 		for(var i=0; i<this._dots; i++) {
@@ -191,6 +198,51 @@ export default class Bezie {
 		}
 	}
 
+	private _demo_alg = (data:Dot[], delta:number) => {
+		
+		let _result:Dot[] = [];
+		for(var i=0; i < data.length-1; i++) {
+			_result.push(this._calc(data[i], data[i+1],delta));
+		}
+
+		if(_result.length > 1) {
+
+			if(_result.length < this._data.length - 1) {
+				for (var i=1 ; i < _result.length; i++) {
+					this._drawLine(_result[i-1], _result[i],.5,`rgba(${colors[_result.length%10]}, .2)`);
+				}
+			}
+
+			this._demo_alg(_result, delta);
+		}
+	}
+
+	private _demo_animate = () => {
+		this._demo_alg(this._data, this._delta);
+
+		if (this._delta > .8) {
+			cancelAnimationFrame(this.animation);
+		} else {
+			this._delta += 0.005;
+			this.animation = requestAnimationFrame(this._demo_animate);
+		}
+	}
+
+	private _demo_start = () => {
+
+		this._clear();
+		this._delta = 0.2;
+		this._dots = 5 + Math.floor(12 * Math.random());
+
+		this._data = [];
+		for(var i=0; i < this._dots; i++) {
+			var dot = this._addPoint();
+			this._data.push(dot);
+		}
+
+		this.animation = requestAnimationFrame(this._demo_animate);
+	}
+
 	public changeType = (type:number) => {
 		switch (type) {
 			case 3:
@@ -234,4 +286,15 @@ export default class Bezie {
 	public reset = () => {
 	 	this._reset();
 	}
+
+	public demo = () => {
+		this._demo_start();
+		clearInterval(this._demo_interval);
+		this._demo_interval = setInterval(this._demo_start, 2500);
+	}
+
+	public stop = () => {
+		clearInterval(this._demo_interval);
+	}
+
 }

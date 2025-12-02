@@ -91,7 +91,7 @@ body > section > .result .controls {
   display: grid;
   gap: 0.5rem;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
 }
 body > section > .result .controls h4 {
   padding: 0;
@@ -154,6 +154,18 @@ body footer > ul > li {
 body footer > ul > li > a {
   display: block;
   font-size: clamp(0.7rem, calc(0.6rem + 0.1vw), 0.8rem);
+}
+body > .demo {
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  top: 0;
+  left: 0;
+}
+body > .demo.visible {
+  display: block;
 }
 .content-grid {
   --gap: clamp(1rem, 6vw, 3rem);
