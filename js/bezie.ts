@@ -100,6 +100,21 @@ export default class Bezie {
 		ctx.fill();
 	}
 
+	private _fill = (color:string = '#111') => {
+		let ctx = this._target.getContext('2d') as CanvasRenderingContext2D;
+		const rect = this._target.getBoundingClientRect();
+		ctx.rect(0, 0, rect.width, rect.height);
+		ctx.fillStyle = color;
+		ctx.fill();
+	}
+
+	private _blur = (radius:number = 3) => {
+		let ctx = this._target.getContext('2d') as CanvasRenderingContext2D;
+		ctx.filter = `blur(${radius}px)`;
+  		ctx.drawImage(this._target, 0, 0);
+  		ctx.filter = 'none';
+	}
+
 	private _drawChords = ():void => {
 		for (var i=0 ; i < this._data.length; i++) {
 			if (i>0) {
@@ -194,7 +209,7 @@ export default class Bezie {
 					this._drawLine(this._storage[i], this._storage[i+1], 2);
 			}
 		} else {
-			this._delta += (1 / (200 - this._speed));
+			this._delta += (1 / (300 - this._speed*2));
 			this.animation = requestAnimationFrame(this._animate);
 		}
 	}
@@ -219,6 +234,7 @@ export default class Bezie {
 	}
 
 	private _demo_animate = () => {
+		this._blur();
 		this._demo_alg(this._data, this._delta);
 
 		if (this._delta > .8) {
@@ -232,6 +248,7 @@ export default class Bezie {
 	private _demo_start = () => {
 
 		this._clear();
+		this._fill();
 		this._delta = 0.2;
 		this._dots = 5 + Math.floor(12 * Math.random());
 
@@ -291,7 +308,7 @@ export default class Bezie {
 	public demo = () => {
 		this._demo_start();
 		clearInterval(this._demo_interval);
-		this._demo_interval = setInterval(this._demo_start, 2500);
+		this._demo_interval = setInterval(this._demo_start, 4500);
 	}
 
 	public stop = () => {

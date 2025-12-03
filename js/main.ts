@@ -51,11 +51,10 @@ var init = ():void => {
 		bezie.reset();
 	});
 
-	document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
-		bezie.toggleSupport();
-	});
+	// document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
+	// 	bezie.toggleSupport();
+	// });
 	
-
 	document.querySelector('#bezie_demo_btn')?.addEventListener('click', function(e) {
 		document.querySelector('.demo')?.classList.add('visible');
 		bezie_demo.demo();

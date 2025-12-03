@@ -54,10 +54,10 @@
 					<label for="bezie_speed">Скорость:&nbsp;</label>
 					<input type="range" name="bezie_speed" id="bezie_speed" min="0" max="100" value="100" step="10">
 				</div>
-				<div>
+				<!-- <div>
 					<input type="checkbox" name="bezie_support" id="bezie_support_btn" checked="checked">
 					<label for="bezie_support_btn">Очищать линии</label>
-				</div>
+				</div> -->
 				<div>
 					<input type="button" id="bezie_redraw_btn" value="Перестроить">
 				</div>
@@ -238,7 +238,7 @@
 					};
 				};
 				this._drawLine = (start, end, lineWidth, strokeStyle) => {
-					let ctx = this._target.getContext('2d');
+					const ctx = this._target.getContext('2d');
 					ctx.beginPath();
 					ctx.lineWidth = lineWidth || 1;
 					ctx.strokeStyle = strokeStyle || 'rgba(51, 102, 255, 1)';
@@ -257,6 +257,19 @@
 					ctx.fillStyle = color || 'red';
 					ctx.arc(dot.x, dot.y, 2, 0, 2 * Math.PI);
 					ctx.fill();
+				};
+				this._fill = (color = '#111') => {
+					let ctx = this._target.getContext('2d');
+					const rect = this._target.getBoundingClientRect();
+					ctx.rect(0, 0, rect.width, rect.height);
+					ctx.fillStyle = color;
+					ctx.fill();
+				};
+				this._blur = (radius = 3) => {
+					let ctx = this._target.getContext('2d');
+					ctx.filter = `blur(${radius}px)`;
+					ctx.drawImage(this._target, 0, 0);
+					ctx.filter = 'none';
 				};
 				this._drawChords = () => {
 					for (var i = 0; i < this._data.length; i++) {
@@ -301,11 +314,9 @@
 					}
 					let _alpha = (this._complex) ? .1 : 1;
 					for (var i = 1; i < _result.length; i++) {
-						if (_result.length > 1) {
-							this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
-						}
+						this._drawLine(_result[i - 1], _result[i], .5, `rgba(${colors[_result.length % 5]}, ${_alpha})`);
 					}
-					if (!this._complex) {
+					if (!this._complex && _result.length > 1) {
 						for (var j = 0; j < _result.length; j++) {
 							this._drawDot(_result[j], '', undefined, `rgb(${colors[_result.length % 5]})`);
 						}
@@ -339,7 +350,7 @@
 						}
 					}
 					else {
-						this._delta += (1 / (200 - this._speed));
+						this._delta += (1 / (300 - this._speed * 2));
 						this.animation = requestAnimationFrame(this._animate);
 					}
 				};
@@ -358,6 +369,7 @@
 					}
 				};
 				this._demo_animate = () => {
+					this._blur();
 					this._demo_alg(this._data, this._delta);
 					if (this._delta > .8) {
 						cancelAnimationFrame(this.animation);
@@ -369,6 +381,7 @@
 				};
 				this._demo_start = () => {
 					this._clear();
+					this._fill();
 					this._delta = 0.2;
 					this._dots = 5 + Math.floor(12 * Math.random());
 					this._data = [];
@@ -420,7 +433,7 @@
 				this.demo = () => {
 					this._demo_start();
 					clearInterval(this._demo_interval);
-					this._demo_interval = setInterval(this._demo_start, 2500);
+					this._demo_interval = setInterval(this._demo_start, 4500);
 				};
 				this.stop = () => {
 					clearInterval(this._demo_interval);
@@ -637,7 +650,7 @@
 		}
 
 		var init = () => {
-			var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+			var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 			const canvas_bezie = document.getElementById('bezie');
 			const canvas_bezie_demo = document.getElementById('bezie_demo');
 			const canvas_bspline = document.getElementById('bspline');
@@ -679,22 +692,22 @@
 			(_c = document.querySelector('#bezie_reset_btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (e) {
 				bezie.reset();
 			});
-			(_d = document.querySelector('#bezie_support_btn')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
-				bezie.toggleSupport();
-			});
-			(_e = document.querySelector('#bezie_demo_btn')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', function (e) {
+			// document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
+			// 	bezie.toggleSupport();
+			// });
+			(_d = document.querySelector('#bezie_demo_btn')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
 				var _a;
 				(_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
 				bezie_demo.demo();
 			});
-			(_f = document.querySelector('#bezie_speed')) === null || _f === void 0 ? void 0 : _f.addEventListener('input', function (e) {
+			(_e = document.querySelector('#bezie_speed')) === null || _e === void 0 ? void 0 : _e.addEventListener('input', function (e) {
 				const input = e.target;
 				bezie.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
 			});
 			// document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
 			// 	bezie.clear();
 			// });
-			(_g = document.querySelector('.demo')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', function (e) {
+			(_f = document.querySelector('.demo')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', function (e) {
 				var _a;
 				(_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
 				bezie_demo.stop();
@@ -705,13 +718,13 @@
 					bspline.changeType(value);
 				});
 			});
-			(_h = document.querySelector('#bspline_reset_btn')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', function (e) {
+			(_g = document.querySelector('#bspline_reset_btn')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', function (e) {
 				bspline.reset();
 			});
-			(_j = document.querySelector('#bspline_auto_btn')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', function (e) {
+			(_h = document.querySelector('#bspline_auto_btn')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', function (e) {
 				bspline.toggleSupport();
 			});
-			(_k = document.querySelector('#bspline_speed')) === null || _k === void 0 ? void 0 : _k.addEventListener('input', function (e) {
+			(_j = document.querySelector('#bspline_speed')) === null || _j === void 0 ? void 0 : _j.addEventListener('input', function (e) {
 				const input = e.target;
 				bspline.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
 			});

@@ -105,6 +105,19 @@ export default class Bezie {
             ctx.arc(dot.x, dot.y, 2, 0, 2 * Math.PI);
             ctx.fill();
         };
+        this._fill = (color = '#111') => {
+            let ctx = this._target.getContext('2d');
+            const rect = this._target.getBoundingClientRect();
+            ctx.rect(0, 0, rect.width, rect.height);
+            ctx.fillStyle = color;
+            ctx.fill();
+        };
+        this._blur = (radius = 3) => {
+            let ctx = this._target.getContext('2d');
+            ctx.filter = `blur(${radius}px)`;
+            ctx.drawImage(this._target, 0, 0);
+            ctx.filter = 'none';
+        };
         this._drawChords = () => {
             for (var i = 0; i < this._data.length; i++) {
                 if (i > 0) {
@@ -184,7 +197,7 @@ export default class Bezie {
                 }
             }
             else {
-                this._delta += (1 / (200 - this._speed));
+                this._delta += (1 / (300 - this._speed * 2));
                 this.animation = requestAnimationFrame(this._animate);
             }
         };
@@ -203,6 +216,7 @@ export default class Bezie {
             }
         };
         this._demo_animate = () => {
+            this._blur();
             this._demo_alg(this._data, this._delta);
             if (this._delta > .8) {
                 cancelAnimationFrame(this.animation);
@@ -214,6 +228,7 @@ export default class Bezie {
         };
         this._demo_start = () => {
             this._clear();
+            this._fill();
             this._delta = 0.2;
             this._dots = 5 + Math.floor(12 * Math.random());
             this._data = [];
@@ -265,7 +280,7 @@ export default class Bezie {
         this.demo = () => {
             this._demo_start();
             clearInterval(this._demo_interval);
-            this._demo_interval = setInterval(this._demo_start, 2500);
+            this._demo_interval = setInterval(this._demo_start, 4500);
         };
         this.stop = () => {
             clearInterval(this._demo_interval);
