@@ -153,12 +153,10 @@ export default class Bezie {
 		let _alpha = (this._complex) ? .1 : 1;
 
 		for (var i=1 ; i < _result.length; i++) {
-			if(_result.length > 1) {
-				this._drawLine(_result[i-1], _result[i],.5,`rgba(${colors[_result.length%5]}, ${_alpha})`);
-			}
+			this._drawLine(_result[i-1], _result[i],.5,`rgba(${colors[_result.length%5]}, ${_alpha})`);
 		}
 
-		if(!this._complex) {
+		if(!this._complex && _result.length > 1) {
 			for(var j = 0; j < _result.length ; j++) {
 				this._drawDot(_result[j], '', undefined, `rgb(${colors[_result.length%5]})`);
 			}
