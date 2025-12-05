@@ -234,7 +234,7 @@ export default class Bezie {
 	}
 
 	private _demo_animate = () => {
-		this._blur();
+		// this._blur();
 		this._demo_alg(this._data, this._delta);
 
 		if (this._delta > .8) {
@@ -248,7 +248,7 @@ export default class Bezie {
 	private _demo_start = () => {
 
 		this._clear();
-		this._fill();
+		// this._fill();
 		this._delta = 0.2;
 		this._dots = 5 + Math.floor(12 * Math.random());
 

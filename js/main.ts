@@ -10,12 +10,9 @@ var init = ():void => {
 	const bezie = new Bezie(canvas_bezie);
 	const bezie_demo = new Bezie(canvas_bezie_demo);
 	const bspline = new Bspline(canvas_bspline);
-	const bspline_demo = new Bspline(canvas_bspline);
-	const elements = Array.from(document.querySelectorAll<HTMLElement>('.kite_image'));
-
+	const bspline_demo = new Bspline(canvas_bspline_demo);
+	
 	const parent = document.querySelector('body > section');
-	var bspline_animation: any;
-	var coordinates:Dot[] = []
 	
 	let _width:any;
 	function resizeCanvas() {
@@ -27,27 +24,22 @@ var init = ():void => {
 				canvas_bezie_demo.width = window.innerWidth;
 				canvas_bezie_demo.height = window.innerHeight;
 			}
+			if(canvas_bspline_demo !== null) {
+				canvas_bspline_demo.width = window.innerWidth;
+				canvas_bspline_demo.height = window.innerHeight;
+			}
 			bezie.redraw();
 			bspline.reset();
 		}
 	}
-	for(let i = 0;i<52;i++){
-		coordinates.push(bspline_demo.get_next_dot());
-	}
+
 	bezie.reset();
 	bspline.reset();
 	bezie_demo.toggleSupport();
-	bspline_demo.reset();
-	bspline_demo.clear();
+	bspline_demo.stop();
+
 	resizeCanvas();
 
-
-	elements.forEach((element, index) => {
-		const targetIndex = index*4;
-		const coord = coordinates[targetIndex];
-		element.style.left = `${coord.x}px`;
-		element.style.top = `${coord.y}px`;
-		element.style.transform = 'translate(-50%, -50%)';})
 	window.addEventListener('resize', resizeCanvas);
 
 	document.querySelector('input[name="bezie_degree"]')?.addEventListener('input', function(e) {
@@ -65,23 +57,16 @@ var init = ():void => {
 	document.querySelector('#bezie_reset_btn')?.addEventListener('click', function(e) {
 		bezie.reset();
 	});
-
-	// document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
-	// 	bezie.toggleSupport();
-	// });
 	
-	document.querySelector('#bezie_demo_btn')?.addEventListener('click', function(e) {
-		document.querySelector('.bezie_demo')?.classList.add('visible');
-		bezie_demo.demo();
-	});
-
 	document.querySelector('#bezie_speed')?.addEventListener('input',function(e){
 		const input = e.target as HTMLInputElement;
 		bezie.setSpeed(parseInt(input?.value));
 	});
-	// document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
-	// 	bezie.clear();
-	// });
+
+	document.querySelector('#bezie_demo_btn')?.addEventListener('click', function(e) {
+		document.querySelector('.bezie_demo')?.classList.add('visible');
+		bezie_demo.demo();
+	});
 
 	document.querySelector('.bezie_demo')?.addEventListener('click', function(e) {
 		document.querySelector('.bezie_demo')?.classList.remove('visible');
@@ -108,10 +93,13 @@ var init = ():void => {
 		bspline.setSpeed(parseInt(input?.value));
 	});
 
-	// document.querySelector('#bspline_clear')?.addEventListener('click', function(e) {
-	// 	bspline.clear();
-	// });
+	var bspline_animation: any;
+	var bspline_coordinates:Dot[] = []
+	const elements = Array.from(document.querySelectorAll<HTMLElement>('.kite_image'));
 
+	for(var i = 0; i < elements.length * 4 + 1; i++) {
+		bspline_coordinates.push(bspline_demo.get_next_dot());
+	}
 
 	document.querySelector('#bspline_demo_btn')?.addEventListener('click', function(e) {
 		document.querySelector('.bspline_demo')?.classList.add('visible');
@@ -122,41 +110,26 @@ var init = ():void => {
 		document.querySelector('.bspline_demo')?.classList.remove('visible');
 		cancelAnimationFrame(bspline_animation);
 	});
-	function _bspline_animate(){
-		coordinates.push(bspline_demo.get_next_dot());
-		coordinates.shift();
+
+	function _bspline_animate () {
+		bspline_coordinates.push(bspline_demo.get_next_dot());
+		bspline_coordinates.shift();
 		elements.forEach((element, index) => {
-			const targetIndex = index*4;
-			const coord = coordinates[targetIndex];
-			const next_coord = coordinates[index+1];
+			const coord = bspline_coordinates[index * 4 + 1];
+			const prevPoint = bspline_coordinates[index * 4];
 
 			element.style.left = `${coord.x}px`;
 			element.style.top = `${coord.y}px`;
-			element.style.transform = 'translate(-50%, -50%)';
-			const img = element.querySelector<HTMLImageElement>('img');
-			if (next_coord) {
-				const dx = next_coord.x - coord.x;
-				const dy = next_coord.y - coord.y;
-
-				// Вычисляем угол в градусах
-				let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-				angle -= 90;
-
+			const img = element.querySelector('img') as HTMLImageElement;
+			if (prevPoint) {
+				const dx = coord.x - prevPoint.x;
+				const dy = coord.y - prevPoint.y;
+				const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
 				img.style.transform = `rotate(${angle}deg)`;
-				} else {
-				const prevPoint = coordinates[index-1];
-				if (prevPoint) {
-					const dx = coord.x - prevPoint.x;
-					const dy = coord.y - prevPoint.y;
-					const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-					img.style.transform = `rotate(${angle}deg)`;}
-      }
-		}
-		
-		
-	);
-	bspline_animation = requestAnimationFrame(_bspline_animate)
-
+			}
+		});
+	
+		bspline_animation = requestAnimationFrame(_bspline_animate)
 	}
 }
 

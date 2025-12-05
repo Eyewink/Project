@@ -173,10 +173,9 @@ body > .demo.visible {
 }
 body > .demo .kite_image {
   position: absolute;
-}
-body > .demo img {
-  transform-origin: center;
-  scale: 50%;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(50%);
 }
 .content-grid {
   --gap: clamp(1rem, 6vw, 3rem);

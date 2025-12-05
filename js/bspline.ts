@@ -21,7 +21,7 @@ export default class Bspline {
 	
 	constructor (target:HTMLCanvasElement) {
 		this._target = target;
-		this.init();
+		this._init();
 	}
 
 	private _clear = ():void => {
@@ -43,15 +43,17 @@ export default class Bspline {
 
 		this._reDraw();
 	}
-	private init = ():void => {
-		this._reset();
 
-		this._target.addEventListener('click', (e) => {
-			const rect = this._target.getBoundingClientRect();
-			const x = e.clientX - rect.left;
-			const y = e.clientY - rect.top;
-			this._userClick({x:x, y:y});
-		});
+	private _init = ():void => {
+		this._reset();
+		this._target.addEventListener('click', this._clickHandler);
+	}
+
+	private _clickHandler = (e:MouseEvent) => {
+		const rect = this._target.getBoundingClientRect();
+		const x = e.clientX - rect.left;
+		const y = e.clientY - rect.top;
+		this._userClick({x:x, y:y});
 	}
 
 	private _addPoint = (_x?:number, _y?:number):Dot => {
@@ -99,7 +101,7 @@ export default class Bspline {
 	private _reDraw = () => {
 		for (var i=0 ; i < this._data.length; i++) {
 			if (i > 0) {
-				this._drawLine(this._data[i-1], this._data[i],.5,'rgba(0,0,0,.5)');
+				this._drawLine(this._data[i-1], this._data[i], .5, 'rgba(0,0,0,.5)');
 			}
 			this._drawDot(this._data[i], letters[i]);
 		}
@@ -196,8 +198,8 @@ export default class Bspline {
 	}
 
 	public get_next_dot = ():Dot =>{
-		this._delta+=0.01
-		if(this._delta>=1){
+		this._delta += 0.01
+		if(this._delta >= 1){
 			this._delta = 0;
 			let dot = this._addPoint();
 			this._data.push(dot);
@@ -206,7 +208,9 @@ export default class Bspline {
 		return this._calc(this._data[0], this._data[1], this._data[2], this._data[3], this._delta);
 	}
 
-
+	public stop = () => {
+		this._target.removeEventListener('click', this._clickHandler);
+	}
 
 	public changeType = (type:string) => {
 		switch (type) {
@@ -223,6 +227,7 @@ export default class Bspline {
 				break;
 		}
 	}
+
 	public redraw = () => {
 		this._clear();
 		this._start = this._calc(this._data[0], this._data[1], this._data[2], this._data[3], 0);

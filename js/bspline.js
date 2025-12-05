@@ -54,14 +54,15 @@ export default class Bspline {
             }
             this._reDraw();
         };
-        this.init = () => {
+        this._init = () => {
             this._reset();
-            this._target.addEventListener('click', (e) => {
-                const rect = this._target.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                this._userClick({ x: x, y: y });
-            });
+            this._target.addEventListener('click', this._clickHandler);
+        };
+        this._clickHandler = (e) => {
+            const rect = this._target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            this._userClick({ x: x, y: y });
         };
         this._addPoint = (_x, _y) => {
             const rect = this._target.getBoundingClientRect();
@@ -196,6 +197,9 @@ export default class Bspline {
             }
             return this._calc(this._data[0], this._data[1], this._data[2], this._data[3], this._delta);
         };
+        this.stop = () => {
+            this._target.removeEventListener('click', this._clickHandler);
+        };
         this.changeType = (type) => {
             switch (type) {
                 case 'simple':
@@ -231,6 +235,6 @@ export default class Bspline {
             this._speed = value;
         };
         this._target = target;
-        this.init();
+        this._init();
     }
 }

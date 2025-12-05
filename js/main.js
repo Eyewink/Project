@@ -9,11 +9,8 @@ var init = () => {
     const bezie = new Bezie(canvas_bezie);
     const bezie_demo = new Bezie(canvas_bezie_demo);
     const bspline = new Bspline(canvas_bspline);
-    const bspline_demo = new Bspline(canvas_bspline);
-    const elements = Array.from(document.querySelectorAll('.kite_image'));
+    const bspline_demo = new Bspline(canvas_bspline_demo);
     const parent = document.querySelector('body > section');
-    var bspline_animation;
-    var coordinates = [];
     let _width;
     function resizeCanvas() {
         if ((parent === null || parent === void 0 ? void 0 : parent.clientWidth) != _width) {
@@ -26,26 +23,19 @@ var init = () => {
                 canvas_bezie_demo.width = window.innerWidth;
                 canvas_bezie_demo.height = window.innerHeight;
             }
+            if (canvas_bspline_demo !== null) {
+                canvas_bspline_demo.width = window.innerWidth;
+                canvas_bspline_demo.height = window.innerHeight;
+            }
             bezie.redraw();
             bspline.reset();
         }
     }
-    for (let i = 0; i < 52; i++) {
-        coordinates.push(bspline_demo.get_next_dot());
-    }
     bezie.reset();
     bspline.reset();
     bezie_demo.toggleSupport();
-    bspline_demo.reset();
-    bspline_demo.clear();
+    bspline_demo.stop();
     resizeCanvas();
-    elements.forEach((element, index) => {
-        const targetIndex = index * 4;
-        const coord = coordinates[targetIndex];
-        element.style.left = `${coord.x}px`;
-        element.style.top = `${coord.y}px`;
-        element.style.transform = 'translate(-50%, -50%)';
-    });
     window.addEventListener('resize', resizeCanvas);
     (_a = document.querySelector('input[name="bezie_degree"]')) === null || _a === void 0 ? void 0 : _a.addEventListener('input', function (e) {
         const input = e.target;
@@ -60,21 +50,15 @@ var init = () => {
     (_c = document.querySelector('#bezie_reset_btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (e) {
         bezie.reset();
     });
-    // document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
-    // 	bezie.toggleSupport();
-    // });
-    (_d = document.querySelector('#bezie_demo_btn')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
+    (_d = document.querySelector('#bezie_speed')) === null || _d === void 0 ? void 0 : _d.addEventListener('input', function (e) {
+        const input = e.target;
+        bezie.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
+    });
+    (_e = document.querySelector('#bezie_demo_btn')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', function (e) {
         var _a;
         (_a = document.querySelector('.bezie_demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
         bezie_demo.demo();
     });
-    (_e = document.querySelector('#bezie_speed')) === null || _e === void 0 ? void 0 : _e.addEventListener('input', function (e) {
-        const input = e.target;
-        bezie.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
-    });
-    // document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
-    // 	bezie.clear();
-    // });
     (_f = document.querySelector('.bezie_demo')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', function (e) {
         var _a;
         (_a = document.querySelector('.bezie_demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
@@ -96,9 +80,12 @@ var init = () => {
         const input = e.target;
         bspline.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
     });
-    // document.querySelector('#bspline_clear')?.addEventListener('click', function(e) {
-    // 	bspline.clear();
-    // });
+    var bspline_animation;
+    var bspline_coordinates = [];
+    const elements = Array.from(document.querySelectorAll('.kite_image'));
+    for (var i = 0; i < elements.length * 4 + 1; i++) {
+        bspline_coordinates.push(bspline_demo.get_next_dot());
+    }
     (_k = document.querySelector('#bspline_demo_btn')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function (e) {
         var _a;
         (_a = document.querySelector('.bspline_demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
@@ -110,32 +97,19 @@ var init = () => {
         cancelAnimationFrame(bspline_animation);
     });
     function _bspline_animate() {
-        coordinates.push(bspline_demo.get_next_dot());
-        coordinates.shift();
+        bspline_coordinates.push(bspline_demo.get_next_dot());
+        bspline_coordinates.shift();
         elements.forEach((element, index) => {
-            const targetIndex = index * 4;
-            const coord = coordinates[targetIndex];
-            const next_coord = coordinates[index + 1];
+            const coord = bspline_coordinates[index * 4 + 1];
+            const prevPoint = bspline_coordinates[index * 4];
             element.style.left = `${coord.x}px`;
             element.style.top = `${coord.y}px`;
-            element.style.transform = 'translate(-50%, -50%)';
             const img = element.querySelector('img');
-            if (next_coord) {
-                const dx = next_coord.x - coord.x;
-                const dy = next_coord.y - coord.y;
-                // Вычисляем угол в градусах
-                let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-                angle -= 90;
+            if (prevPoint) {
+                const dx = coord.x - prevPoint.x;
+                const dy = coord.y - prevPoint.y;
+                const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
                 img.style.transform = `rotate(${angle}deg)`;
-            }
-            else {
-                const prevPoint = coordinates[index - 1];
-                if (prevPoint) {
-                    const dx = coord.x - prevPoint.x;
-                    const dy = coord.y - prevPoint.y;
-                    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-                    img.style.transform = `rotate(${angle}deg)`;
-                }
             }
         });
         bspline_animation = requestAnimationFrame(_bspline_animate);
