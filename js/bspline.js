@@ -186,6 +186,16 @@ export default class Bspline {
                 this.animation = requestAnimationFrame(this._animate);
             }
         };
+        this.get_next_dot = () => {
+            this._delta += 0.01;
+            if (this._delta >= 1) {
+                this._delta = 0;
+                let dot = this._addPoint();
+                this._data.push(dot);
+                this._data.shift();
+            }
+            return this._calc(this._data[0], this._data[1], this._data[2], this._data[3], this._delta);
+        };
         this.changeType = (type) => {
             switch (type) {
                 case 'simple':

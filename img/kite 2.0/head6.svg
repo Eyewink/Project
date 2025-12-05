@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="35.302788mm"
+   height="13.999994mm"
+   viewBox="0 0 35.302788 13.999994"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     style="display:inline"
+     transform="translate(-27.394954,-66.500009)">
+    <g
+       id="g12"
+       style="display:none">
+      <path
+         style="fill:#190086;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         d="M 32.5,80 45,77 57.5,80 52,90 H 38 Z"
+         id="path12" />
+      <ellipse
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.995437;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         id="path7-2-2-2-7-9-2"
+         cx="49.5"
+         cy="84.5"
+         rx="3.5022814"
+         ry="3.5022795" />
+      <ellipse
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.995437;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         id="path7-2-2-2-7-9-2-4"
+         cx="41"
+         cy="84.5"
+         rx="3.5022814"
+         ry="3.5022795" />
+    </g>
+    <g
+       id="g11"
+       style="display:inline">
+      <path
+         style="display:inline;fill:#03d0ff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         d="m 28,70 17,-3 17,3 c 0.804954,4.821949 -0.869626,8.042533 -4.5,10 L 45,77 32.5,80 C 28.873531,78.084312 27.467453,74.688365 28,70 Z"
+         id="path11" />
+      <ellipse
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.995437;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         id="path7-2-2-2-7"
+         cx="34.799999"
+         cy="74.5"
+         rx="3.5022814"
+         ry="3.5022795" />
+      <ellipse
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.995437;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         id="path7-2-2-2-7-9"
+         cx="55.200001"
+         cy="74.5"
+         rx="3.5022814"
+         ry="3.5022795" />
+    </g>
+    <g
+       id="g10"
+       style="display:none">
+      <path
+         style="fill:#30ff03;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         d="M 23.5,60 45,57 66.5,60 c 0.695929,4.3581 0.611266,8.351924 -4.5,10 L 45,67 28,70 C 23.332627,67.933616 22.995357,64.135191 23.5,60 Z"
+         id="path10" />
+      <ellipse
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.995437;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         id="path7-2-2-2"
+         cx="30.299999"
+         cy="64.5"
+         rx="3.5022814"
+         ry="3.5022795" />
+      <ellipse
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.995437;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         id="path7-2-2-13"
+         cx="59.700001"
+         cy="64.5"
+         rx="3.5022814"
+         ry="3.5022795" />
+    </g>
+  </g>
+</svg>

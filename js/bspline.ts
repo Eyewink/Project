@@ -18,6 +18,7 @@ export default class Bspline {
 	private animation: any;
 	private _speed:number = 100;
 
+	
 	constructor (target:HTMLCanvasElement) {
 		this._target = target;
 		this.init();
@@ -42,7 +43,6 @@ export default class Bspline {
 
 		this._reDraw();
 	}
-
 	private init = ():void => {
 		this._reset();
 
@@ -194,6 +194,20 @@ export default class Bspline {
 			this.animation = requestAnimationFrame(this._animate);
 		}
 	}
+
+	public get_next_dot = ():Dot =>{
+		this._delta+=0.01
+		if(this._delta>=1){
+			this._delta = 0;
+			let dot = this._addPoint();
+			this._data.push(dot);
+			this._data.shift();
+		}
+		return this._calc(this._data[0], this._data[1], this._data[2], this._data[3], this._delta);
+	}
+
+
+
 	public changeType = (type:string) => {
 		switch (type) {
 			case 'simple':
@@ -209,7 +223,6 @@ export default class Bspline {
 				break;
 		}
 	}
-
 	public redraw = () => {
 		this._clear();
 		this._start = this._calc(this._data[0], this._data[1], this._data[2], this._data[3], 0);

@@ -171,6 +171,13 @@ body > .demo {
 body > .demo.visible {
   display: block;
 }
+body > .demo .kite_image {
+  position: absolute;
+}
+body > .demo img {
+  transform-origin: center;
+  scale: 50%;
+}
 .content-grid {
   --gap: clamp(1rem, 6vw, 3rem);
   --full: minmax(var(--gap), 1fr);
