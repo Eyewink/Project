@@ -95,7 +95,7 @@
 				</div>
 				<div class="middle">
 					<label for="bspline_speed">Скорость:&nbsp;</label>
-					<input type="range" name="bspline_speed" id="bspline_speed" min="0" max="100" value="100" step="20">
+					<input type="range" name="bspline_speed" id="bspline_speed" min="0" max="100" value="100" step="10">
 				</div>
 				<div>
 					<input type="checkbox" name="bspline_auto" id="bspline_auto_btn">
@@ -104,6 +104,9 @@
                 <div>
                     <input type="button" id="bspline_reset_btn" value="Заново">
                 </div>
+				<div>
+					<input type="button" id="bspline_demo_btn" value="Демо">
+				</div>
             </div>
 			<canvas id="bspline" width="1000" height="500">
                 Ваш браузер не поддерживает canvas.
@@ -141,10 +144,56 @@
 		</ul>
 	</footer>
 
-	<div class="demo">
+	<div class="demo bezie_demo">
 		<canvas id="bezie_demo" width="1000" height="500">
 			Ваш браузер не поддерживает canvas.
         </canvas>
+	</div>
+
+	<div class="demo bspline_demo">
+		<canvas id="bspline_demo" width="1000" height="500">
+			Ваш браузер не поддерживает canvas.
+        </canvas>
+		
+		<div class="kite_image">
+			<img src="img/kite 2.0/end.svg" alt="kite end">
+		</div>
+		<div class="kite_image">
+			<img src="img/kite 2.0/tail.svg" alt="kite tail">
+		</div>
+		<div class="kite_image">
+			<img src="img/kite 2.0/tail.svg" alt="kite tail">
+		</div>
+		<div class="kite_image">
+			<img src="img/kite 2.0/tail.svg" alt="kite tail">
+		</div>
+		<div class="kite_image">
+			<img src="img/kite 2.0/tail.svg" alt="kite tail">
+		</div>
+		<div class="kite_image">
+			<img src="img/kite 2.0/tail.svg" alt="kite tail">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head7.svg" alt="head7">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head6.svg" alt="head6">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head5.svg" alt="head5">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head4.svg" alt="head4">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head3.svg" alt="head3">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head2.svg" alt="head2">
+		</div>
+		<div class = "kite_image">
+			<img src="img/kite 2.0/head1.svg" alt="head1">
+		</div>
 	</div>
 
 	<script type="module" defer>
@@ -369,7 +418,7 @@
 					}
 				};
 				this._demo_animate = () => {
-					this._blur();
+					// this._blur();
 					this._demo_alg(this._data, this._delta);
 					if (this._delta > .8) {
 						cancelAnimationFrame(this.animation);
@@ -381,7 +430,7 @@
 				};
 				this._demo_start = () => {
 					this._clear();
-					this._fill();
+					// this._fill();
 					this._delta = 0.2;
 					this._dots = 5 + Math.floor(12 * Math.random());
 					this._data = [];
@@ -478,14 +527,15 @@
 					}
 					this._reDraw();
 				};
-				this.init = () => {
+				this._init = () => {
 					this._reset();
-					this._target.addEventListener('click', (e) => {
-						const rect = this._target.getBoundingClientRect();
-						const x = e.clientX - rect.left;
-						const y = e.clientY - rect.top;
-						this._userClick({ x: x, y: y });
-					});
+					this._target.addEventListener('click', this._clickHandler);
+				};
+				this._clickHandler = (e) => {
+					const rect = this._target.getBoundingClientRect();
+					const x = e.clientX - rect.left;
+					const y = e.clientY - rect.top;
+					this._userClick({ x: x, y: y });
 				};
 				this._addPoint = (_x, _y) => {
 					const rect = this._target.getBoundingClientRect();
@@ -610,6 +660,19 @@
 						this.animation = requestAnimationFrame(this._animate);
 					}
 				};
+				this.get_next_dot = () => {
+					this._delta += 0.01;
+					if (this._delta >= 1) {
+						this._delta = 0;
+						let dot = this._addPoint();
+						this._data.push(dot);
+						this._data.shift();
+					}
+					return this._calc(this._data[0], this._data[1], this._data[2], this._data[3], this._delta);
+				};
+				this.stop = () => {
+					this._target.removeEventListener('click', this._clickHandler);
+				};
 				this.changeType = (type) => {
 					switch (type) {
 						case 'simple':
@@ -645,18 +708,20 @@
 					this._speed = value;
 				};
 				this._target = target;
-				this.init();
+				this._init();
 			}
 		}
 
 		var init = () => {
-			var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+			var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
 			const canvas_bezie = document.getElementById('bezie');
 			const canvas_bezie_demo = document.getElementById('bezie_demo');
 			const canvas_bspline = document.getElementById('bspline');
+			const canvas_bspline_demo = document.getElementById('bspline_demo');
 			const bezie = new Bezie(canvas_bezie);
 			const bezie_demo = new Bezie(canvas_bezie_demo);
 			const bspline = new Bspline(canvas_bspline);
+			const bspline_demo = new Bspline(canvas_bspline_demo);
 			const parent = document.querySelector('body > section');
 			let _width;
 			function resizeCanvas() {
@@ -670,6 +735,10 @@
 						canvas_bezie_demo.width = window.innerWidth;
 						canvas_bezie_demo.height = window.innerHeight;
 					}
+					if (canvas_bspline_demo !== null) {
+						canvas_bspline_demo.width = window.innerWidth;
+						canvas_bspline_demo.height = window.innerHeight;
+					}
 					bezie.redraw();
 					bspline.reset();
 				}
@@ -677,6 +746,7 @@
 			bezie.reset();
 			bspline.reset();
 			bezie_demo.toggleSupport();
+			bspline_demo.stop();
 			resizeCanvas();
 			window.addEventListener('resize', resizeCanvas);
 			(_a = document.querySelector('input[name="bezie_degree"]')) === null || _a === void 0 ? void 0 : _a.addEventListener('input', function (e) {
@@ -692,24 +762,18 @@
 			(_c = document.querySelector('#bezie_reset_btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (e) {
 				bezie.reset();
 			});
-			// document.querySelector('#bezie_support_btn')?.addEventListener('click', function(e) {
-			// 	bezie.toggleSupport();
-			// });
-			(_d = document.querySelector('#bezie_demo_btn')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function (e) {
-				var _a;
-				(_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
-				bezie_demo.demo();
-			});
-			(_e = document.querySelector('#bezie_speed')) === null || _e === void 0 ? void 0 : _e.addEventListener('input', function (e) {
+			(_d = document.querySelector('#bezie_speed')) === null || _d === void 0 ? void 0 : _d.addEventListener('input', function (e) {
 				const input = e.target;
 				bezie.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
 			});
-			// document.querySelector('#bezie_clear')?.addEventListener('click', function(e) {
-			// 	bezie.clear();
-			// });
-			(_f = document.querySelector('.demo')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', function (e) {
+			(_e = document.querySelector('#bezie_demo_btn')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', function (e) {
 				var _a;
-				(_a = document.querySelector('.demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
+				(_a = document.querySelector('.bezie_demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
+				bezie_demo.demo();
+			});
+			(_f = document.querySelector('.bezie_demo')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', function (e) {
+				var _a;
+				(_a = document.querySelector('.bezie_demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
 				bezie_demo.stop();
 			});
 			document.querySelectorAll('input[name="bspline_type"]').forEach(radio => {
@@ -728,9 +792,40 @@
 				const input = e.target;
 				bspline.setSpeed(parseInt(input === null || input === void 0 ? void 0 : input.value));
 			});
-			// document.querySelector('#bspline_clear')?.addEventListener('click', function(e) {
-			// 	bspline.clear();
-			// });
+			var bspline_animation;
+			var bspline_coordinates = [];
+			const elements = Array.from(document.querySelectorAll('.kite_image'));
+			for (var i = 0; i < elements.length * 4 + 1; i++) {
+				bspline_coordinates.push(bspline_demo.get_next_dot());
+			}
+			(_k = document.querySelector('#bspline_demo_btn')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function (e) {
+				var _a;
+				(_a = document.querySelector('.bspline_demo')) === null || _a === void 0 ? void 0 : _a.classList.add('visible');
+				bspline_animation = requestAnimationFrame(_bspline_animate);
+			});
+			(_l = document.querySelector('.bspline_demo')) === null || _l === void 0 ? void 0 : _l.addEventListener('click', function (e) {
+				var _a;
+				(_a = document.querySelector('.bspline_demo')) === null || _a === void 0 ? void 0 : _a.classList.remove('visible');
+				cancelAnimationFrame(bspline_animation);
+			});
+			function _bspline_animate() {
+				bspline_coordinates.push(bspline_demo.get_next_dot());
+				bspline_coordinates.shift();
+				elements.forEach((element, index) => {
+					const coord = bspline_coordinates[index * 4 + 1];
+					const prevPoint = bspline_coordinates[index * 4];
+					element.style.left = `${coord.x}px`;
+					element.style.top = `${coord.y}px`;
+					const img = element.querySelector('img');
+					if (prevPoint) {
+						const dx = coord.x - prevPoint.x;
+						const dy = coord.y - prevPoint.y;
+						const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+						img.style.transform = `rotate(${angle}deg)`;
+					}
+				});
+				bspline_animation = requestAnimationFrame(_bspline_animate);
+			}
 		};
 		//document.addEventListener('DOMContentLoaded', init);
 		window.addEventListener('load', init);
